@@ -4,7 +4,7 @@
     {
       "name": "infraction-finder",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["serveur.py"],
+      "runtimeArgs": ["-m", "http.server", "8765", "--bind", "127.0.0.1"],
       "port": 8765
     }
   ]

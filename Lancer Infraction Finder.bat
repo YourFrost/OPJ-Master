@@ -1,4 +1,5 @@
 @echo off
+rem Version locale (hors ligne) : sert le site sur http://127.0.0.1:8765
 cd /d "%~dp0"
 start "" http://127.0.0.1:8765
-python serveur.py
+python -m http.server 8765 --bind 127.0.0.1

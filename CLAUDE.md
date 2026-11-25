@@ -2,13 +2,13 @@
 
 Entraînement aux épreuves de l'examen OPJ : **DPG / DPS** (recherche d'infractions) et **CRT** (compte rendu téléphonique au parquet). Tout est en français.
 
-- `python serveur.py` → http://127.0.0.1:8765 (raccourci : `Lancer Infraction Finder.bat`). Page unique : `web/index.html`.
-- Aucune API d'IA : **Claude génère les exercices (`/exercice`) et les corrige (`/corriger`).** La correction est écrite dans `data/corrections/<id>.json` et s'affiche sur la plateforme.
-- `data/sujets/<id>.json` : écrit par Claude. Le champ `corrige` n'est envoyé au navigateur qu'une fois la correction écrite.
-- `data/copies/<id>.json` : écrit par l'application, et seulement par elle. `rendue_le` indique que l'exercice est terminé.
-- Statuts : nouveau → en cours → terminé (copie envoyée) → corrigé (fichier de correction présent).
+- **Site statique** publié par GitHub Pages : https://yourfrost.github.io/OPJ-Master/ (dépôt public `YourFrost/OPJ-Master`, branche `main`, racine). Page unique : `index.html`. Version locale hors ligne : `Lancer Infraction Finder.bat` (`python -m http.server`).
+- Aucune API d'IA : **Claude génère les exercices (`/exercice`) et les corrige (`/corriger`)**, puis fait `git add`, `git commit` et `git push` pour publier. Le site se met à jour 1 à 2 minutes après le push.
+- `data/sujets/index.json` : liste des id d'exercices (le plus récent d'abord), à tenir à jour. `data/sujets/<id>.json` : écrit par Claude. Le corrigé y est lisible (dépôt public) mais la page ne l'affiche qu'une fois la correction publiée.
+- La copie de l'utilisateur vit dans son navigateur (`localStorage`). « Envoyer » produit la commande `/corriger <id> <copie JSON>` ; Claude l'enregistre dans `data/copies/<id>.json`, sans la modifier.
+- Statuts : nouveau → en cours → terminé (copie envoyée) → corrigé (`data/corrections/<id>.json` publié).
+- **Ne jamais publier `_ancien/`** (documentation en diffusion restreinte ; exclu par `.gitignore`).
 - Articles : texte **en vigueur** du Code pénal (et des autres codes) sur Légifrance. En cas de doute, vérifier ; ne jamais inventer un article ou un alinéa.
-- L'ancienne version du projet est rangée dans `_ancien/` (ne pas l'utiliser).
 
 ## Sujet DPG / DPS
 ```json
@@ -26,7 +26,7 @@ Entraînement aux épreuves de l'examen OPJ : **DPG / DPS** (recherche d'infract
   "pieges": ["Infraction voisine à ne pas retenir, et pourquoi"]
 }
 ```
-Copie : `{ reponses: [{ infraction, qualification, mis_en_cause, element_legal, elements_materiels: [{element, justification}], element_moral: {type, justification} }], rendue_le }`
+Copie (`data/copies/<id>.json`) : `{ reponses: [{ infraction, qualification, mis_en_cause, element_legal, elements_materiels: [{element, justification}], element_moral: {type, justification} }], rendue_le }`
 
 ## Sujet CRT
 ```json
@@ -37,7 +37,7 @@ Copie : `{ reponses: [{ infraction, qualification, mis_en_cause, element_legal, 
   "pieges": ["…"]
 }
 ```
-Copie : `{ blocs: { presentation, objet, faits, actes_realises, actes_a_realiser, qualification }, rendue_le }`
+Copie (`data/copies/<id>.json`) : `{ blocs: { presentation, objet, faits, actes_realises, actes_a_realiser, qualification }, rendue_le }`
 
 ## Correction `data/corrections/<id>.json` (les deux épreuves)
 ```json

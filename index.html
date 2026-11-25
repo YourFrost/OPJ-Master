@@ -39,7 +39,19 @@
 "use strict";
 const vue = document.getElementById("vue");
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-const api = (chemin, corps) => fetch("/api/" + chemin, corps ? { method: "PUT", body: JSON.stringify(corps) } : undefined).then((r) => r.json());
+// Site statique (GitHub Pages) : sujets et corrections sont des fichiers du dépôt, la copie vit dans le navigateur
+const lireJson = (chemin) => fetch(chemin, { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+const copieLocale = (id) => { try { return JSON.parse(localStorage.getItem("copie:" + id)); } catch { return null; } };
+const ecrireCopie = (id, copie) => { try { localStorage.setItem("copie:" + id, JSON.stringify(copie)); } catch { /* stockage indisponible */ } };
+async function chargerSujet(id) {
+  const [sujet, corr, copieFichier] = await Promise.all([lireJson(`data/sujets/${id}.json`), lireJson(`data/corrections/${id}.json`), lireJson(`data/copies/${id}.json`)]);
+  if (!sujet) return {};
+  const copie = copieLocale(id) || copieFichier;
+  sujet.statut = corr ? "corrige" : copie?.rendue_le ? "rendu" : copie ? "en_cours" : "nouveau";
+  if (!corr) delete sujet.corrige; // le corrigé n'est affiché qu'après la correction
+  return { sujet, corr, copie };
+}
+const commandeCorriger = (id, copie) => `/corriger ${id} ${JSON.stringify(copie)}`;
 const STATUT = { nouveau: "Nouveau", en_cours: "En cours", rendu: "Terminé", corrige: "Corrigé" };
 const EPREUVE = { dps: "DPG / DPS", crt: "CRT" };
 const ICONE = { ok: "✅", partiel: "⚠️", faux: "❌" };
@@ -56,7 +68,8 @@ const BLOCS_CRT = [
 
 /* ---------- Accueil : lancer un exercice + liste ---------- */
 async function accueil() {
-  const sujets = await api("sujets");
+  const ids = (await lireJson("data/sujets/index.json")) || [];
+  const sujets = (await Promise.all(ids.map(async (id) => (await chargerSujet(id)).sujet))).filter(Boolean);
   vue.innerHTML = `
     <div class="carte">
       <h2 style="margin-top:0">Lancer un exercice</h2>
@@ -65,13 +78,13 @@ async function accueil() {
         <label><input type="radio" name="type" value="multiple"> Multiple : entre
           <input type="number" id="min" value="2" min="2" max="8"> et <input type="number" id="max" value="4" min="2" max="8"> infractions</label></p>
       <p class="ligne"><b>CRT</b> <label><input type="radio" name="type" value="crt"> Compte rendu téléphonique (1 à 3 infractions)</label></p>
-      <p class="ligne">Colle cette commande dans Claude Code, puis actualise la page :
+      <p class="ligne">Colle cette commande dans Claude Code, puis actualise la page une à deux minutes plus tard :
         <code id="cmd"></code><button id="copier">Copier</button></p>
     </div>
     <div class="carte"><h2 style="margin-top:0">Mes exercices</h2>
       ${sujets.length ? sujets.map((s) => `<p class="ligne"><span class="badge ${s.statut}">${STATUT[s.statut]}</span>
         <span class="badge">${EPREUVE[s.epreuve || "dps"]}</span><a href="#${s.id}">${esc(s.titre)}</a>
-        ${s.statut === "rendu" ? `<code>/corriger ${s.id}</code>` : ""}</p>`).join("") : `<p class="doux">Aucun exercice pour l'instant.</p>`}
+        ${s.statut === "rendu" ? `<span class="doux">en attente de correction</span>` : ""}</p>`).join("") : `<p class="doux">Aucun exercice pour l'instant.</p>`}
     </div>`;
   const cmd = () => {
     const type = vue.querySelector("[name=type]:checked").value;
@@ -108,15 +121,15 @@ function vueCorrection(sujet, corr) {
 
 /* ---------- Exercice : thème + réponses ---------- */
 async function exercice(id) {
-  const [sujet, copieLue, corr] = await Promise.all([api("sujets/" + id), api("copies/" + id), api("corrections/" + id)]);
-  if (sujet.erreur) return accueil();
+  const { sujet, corr, copie: copieLue } = await chargerSujet(id);
+  if (!sujet) return accueil();
   const crt = sujet.epreuve === "crt";
   const copie = crt ? { blocs: {}, ...copieLue } : { reponses: [], ...copieLue };
   if (!crt && !copie.reponses.length) copie.reponses.push(nouvelleInfraction());
   const lecture = sujet.statut === "rendu" || sujet.statut === "corrige";
   const dis = lecture ? "disabled" : "";
   let minuteur;
-  const sauver = () => { clearTimeout(minuteur); minuteur = setTimeout(() => api("copies/" + id, copie), 600); };
+  const sauver = () => { clearTimeout(minuteur); minuteur = setTimeout(() => ecrireCopie(id, copie), 400); };
 
   const champ = (chemin, val, ph, ta = true) => ta
     ? `<textarea data-c="${chemin}" placeholder="${esc(ph)}" ${dis}>${esc(val)}</textarea>`
@@ -155,7 +168,9 @@ async function exercice(id) {
     vue.innerHTML = `
       <p class="ligne"><a class="btn" href="#">← Exercices</a><span class="badge">${EPREUVE[sujet.epreuve || "dps"]}</span>
         <b>${esc(sujet.titre)}</b><span class="badge ${sujet.statut}">${STATUT[sujet.statut]}</span></p>
-      ${sujet.statut === "rendu" ? `<div class="carte">Exercice terminé. Tape <code>/corriger ${id}</code> dans Claude Code, puis actualise la page pour voir la correction.</div>` : ""}
+      ${sujet.statut === "rendu" ? `<div class="carte">Exercice terminé. Colle cette commande (elle contient ta réponse) dans Claude Code, puis actualise la page une à deux minutes après la correction :
+        <textarea readonly id="cmd-corriger" style="margin-top:8px">${esc(commandeCorriger(id, copie))}</textarea>
+        <button id="copier-corriger">Copier</button></div>` : ""}
       ${sujet.statut === "corrige" ? vueCorrection(sujet, corr) : ""}
       <div class="grille">
         <div class="carte theme">${esc(sujet.theme)}</div>
@@ -185,8 +200,12 @@ async function exercice(id) {
     else if (e.target.id === "envoyer") {
       if (!confirm("Envoyer ta réponse ? Elle ne pourra plus être modifiée.")) return;
       clearTimeout(minuteur);
-      await api("copies/" + id, { ...copie, rendre: true });
+      copie.rendue_le = new Date().toISOString().slice(0, 19);
+      ecrireCopie(id, copie);
+      navigator.clipboard?.writeText(commandeCorriger(id, copie)).catch(() => {});
       return exercice(id);
+    } else if (e.target.id === "copier-corriger") {
+      return navigator.clipboard.writeText(commandeCorriger(id, copie)).catch(() => document.getElementById("cmd-corriger").select());
     } else return;
     sauver();
     rendre();

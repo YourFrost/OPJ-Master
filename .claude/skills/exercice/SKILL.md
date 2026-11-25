@@ -13,8 +13,9 @@ Commun :
 1. Lire `CLAUDE.md` (formats), puis lister `data/sujets/` pour ne pas répéter les mêmes infractions ou scénarios.
 2. **Écrire le corrigé d'abord**, puis le sujet. **Vérifier sur Légifrance** tout article ou alinéa dont tu n'es pas certain.
 3. Le sujet est un récit factuel (prénoms, âges, dates, heures, lieux, paroles entre guillemets). Chaque élément du corrigé y est clairement établi, et l'infraction n'est jamais nommée. Ajouter 1 ou 2 pièges réalistes, à noter dans `pieges`.
-4. Écrire `data/sujets/<id>.json` (`"epreuve": "dps"` ou `"crt"`), puis valider le JSON (`python -c "import json;json.load(open(r'…',encoding='utf-8'))"`).
-5. Répondre en une ligne, **sans rien révéler du corrigé** : le titre et « Actualise la page http://127.0.0.1:8765 pour commencer ».
+4. Écrire `data/sujets/<id>.json` (`"epreuve": "dps"` ou `"crt"`), ajouter l'id **en tête** de `data/sujets/index.json`, puis valider les deux JSON (`python -c "import json;json.load(open(r'…',encoding='utf-8'))"`).
+5. Publier : `git add data/sujets && git commit -m "Exercice : <titre>" && git push` (message terminé par la ligne `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`).
+6. Répondre en une ligne, **sans rien révéler du corrigé** : le titre et « Actualise https://yourfrost.github.io/OPJ-Master/ dans une à deux minutes pour commencer ».
 
 ## DPG / DPS
 Corrigé, pour chaque infraction :
