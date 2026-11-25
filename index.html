@@ -3,57 +3,165 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Infraction Finder</title>
+<title>OPJ Master</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23213a74'/%3E%3Cpath d='M16 6v20M9 11h14M9 11l-3 7h6zM23 11l-3 7h6z' stroke='%23f2c14e' stroke-width='2' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
-  :root { --fond:#f4f5f8; --carte:#fff; --bord:#d9dee8; --texte:#1b2233; --doux:#5a6378; --prim:#1d3a6e; --ok:#1e7a4c; --moyen:#9a6700; --ko:#b42318; color-scheme: light; }
-  @media (prefers-color-scheme: dark) { :root { --fond:#11151d; --carte:#1a202b; --bord:#333d4e; --texte:#e6e9ef; --doux:#9aa4b8; --prim:#3f67b0; --ok:#5fd39a; --moyen:#f0c05a; --ko:#ff8a80; color-scheme: dark; } }
+  :root {
+    --fond: #f3f5f9; --carte: #fff; --carte-2: #f7f8fb; --bord: #e1e5ee; --texte: #18203a; --doux: #5f6882;
+    --prim: #213a74; --prim-2: #3657a8; --or: #c9971c; --ok: #1d7a4b; --moyen: #a36a00; --ko: #c0352b;
+    --ombre: 0 1px 2px rgba(24, 32, 58, .05), 0 6px 20px rgba(24, 32, 58, .06); --rayon: 14px; color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) { :root {
+    --fond: #0f1320; --carte: #171d2e; --carte-2: #1d2438; --bord: #2b3450; --texte: #e8ebf4; --doux: #9aa3bd;
+    --prim: #4f74d1; --prim-2: #7193e6; --or: #f2c14e; --ok: #5fd39a; --moyen: #f0c05a; --ko: #ff8a80;
+    --ombre: 0 1px 2px rgba(0, 0, 0, .35), 0 8px 24px rgba(0, 0, 0, .3); color-scheme: dark; } }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--fond); color: var(--texte); font: 15px/1.55 "Segoe UI", system-ui, sans-serif; }
-  header { background: var(--prim); color: #fff; padding: 12px 24px; font-weight: 650; }
-  header a { color: inherit; text-decoration: none; }
-  main { max-width: 1300px; margin: 0 auto; padding: 24px 16px; }
-  .carte { background: var(--carte); border: 1px solid var(--bord); border-radius: 10px; padding: 16px 18px; margin-bottom: 16px; }
+  body { margin: 0; background: var(--fond); color: var(--texte); font: 15px/1.6 "Segoe UI", system-ui, -apple-system, sans-serif; }
+  a { color: var(--prim-2); }
+  header { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 28px; padding: 0 28px; height: 60px;
+    background: linear-gradient(90deg, #172a57, #26458a); color: #fff; box-shadow: 0 2px 12px rgba(0, 0, 0, .15); }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.15rem; color: #fff; text-decoration: none; letter-spacing: .2px; }
+  .logo svg { width: 30px; height: 30px; }
+  .logo span b { color: #f2c14e; }
+  nav { display: flex; gap: 4px; }
+  nav a { color: rgba(255, 255, 255, .8); text-decoration: none; padding: 7px 14px; border-radius: 99px; font-weight: 550; }
+  nav a:hover { background: rgba(255, 255, 255, .1); color: #fff; }
+  nav a.actif { background: rgba(255, 255, 255, .18); color: #fff; }
+  main { max-width: 1320px; margin: 0 auto; padding: 28px 20px 60px; }
+  h1 { font-size: 1.6rem; margin: 0 0 4px; } h2 { font-size: 1.15rem; margin: 0 0 12px; } h3 { margin: 0; font-size: 1.02rem; }
+  .sous-titre { color: var(--doux); margin: 0 0 24px; }
+  .carte { background: var(--carte); border: 1px solid var(--bord); border-radius: var(--rayon); padding: 18px 20px; margin-bottom: 18px; box-shadow: var(--ombre); }
   .ligne { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .espace { flex: 1; }
   .doux { color: var(--doux); font-size: .9rem; }
-  button, .btn { font: inherit; padding: 7px 14px; border-radius: 7px; border: 1px solid var(--bord); background: var(--carte); color: var(--texte); cursor: pointer; text-decoration: none; }
-  .prim { background: var(--prim); border-color: var(--prim); color: #fff; }
-  input, textarea, select { font: inherit; color: var(--texte); background: var(--carte); border: 1px solid var(--bord); border-radius: 7px; padding: 7px 10px; width: 100%; }
-  input[type=number] { width: 70px; } input[type=radio] { width: auto; }
-  textarea { resize: vertical; min-height: 40px; }
-  label.titre { display: block; font-size: .78rem; font-weight: 700; text-transform: uppercase; color: var(--doux); margin: 12px 0 4px; }
-  code { background: var(--fond); border: 1px dashed var(--bord); padding: 4px 8px; border-radius: 6px; }
-  .grille { display: grid; grid-template-columns: 5fr 7fr; gap: 20px; align-items: start; }
-  .theme { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow: auto; white-space: pre-wrap; text-align: justify; }
-  .rang { display: grid; grid-template-columns: 1fr 1fr 34px; gap: 8px; margin-bottom: 8px; }
-  .badge { font-size: .75rem; font-weight: 600; padding: 2px 8px; border-radius: 99px; border: 1px solid var(--bord); }
-  .rendu { color: var(--moyen); border-color: var(--moyen); } .corrige { color: var(--ok); border-color: var(--ok); }
+  button, .btn { font: inherit; font-weight: 550; padding: 8px 15px; border-radius: 9px; border: 1px solid var(--bord); background: var(--carte); color: var(--texte); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  button:hover, .btn:hover { border-color: var(--prim-2); }
+  button:disabled { opacity: .5; cursor: default; }
+  .prim { background: var(--prim); border-color: var(--prim); color: #fff; } .prim:hover { background: var(--prim-2); }
+  .mini { padding: 4px 10px; font-size: .85rem; }
+  .icone { padding: 6px 9px; }
+  input, textarea, select { font: inherit; color: var(--texte); background: var(--carte-2); border: 1px solid var(--bord); border-radius: 9px; padding: 8px 11px; width: 100%; }
+  input:focus, textarea:focus, select:focus { outline: 2px solid color-mix(in srgb, var(--prim-2) 40%, transparent); border-color: var(--prim-2); background: var(--carte); }
+  input[type=number] { width: 72px; } input[type=radio], input[type=checkbox] { width: auto; accent-color: var(--prim); }
+  textarea { resize: vertical; min-height: 44px; }
+  label.titre { display: block; font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--doux); margin: 14px 0 5px; }
+  code { background: var(--carte-2); border: 1px dashed var(--bord); padding: 5px 9px; border-radius: 7px; font-size: .9rem; }
+  .badge { font-size: .74rem; font-weight: 650; padding: 2px 9px; border-radius: 99px; border: 1px solid var(--bord); white-space: nowrap; color: var(--doux); }
+  .b-nouveau { color: var(--prim-2); border-color: var(--prim-2); } .b-en_cours { color: var(--moyen); border-color: var(--moyen); }
+  .b-rendu { color: var(--or); border-color: var(--or); } .b-corrige { color: var(--ok); border-color: var(--ok); }
   .ok { color: var(--ok); } .partiel { color: var(--moyen); } .faux { color: var(--ko); }
-  .section { border-top: 1px solid var(--bord); padding: 8px 0; } .pre { white-space: pre-wrap; }
-  @media (max-width: 850px) { .grille, .rang { grid-template-columns: 1fr; } .theme { position: static; max-height: none; } }
+  .pre { white-space: pre-wrap; }
+
+  /* accueil */
+  .epreuves { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-bottom: 26px; }
+  .epreuve { display: flex; flex-direction: column; gap: 12px; margin: 0; border-top: 4px solid var(--prim); }
+  .epreuve.crt { border-top-color: var(--or); } .epreuve.pp { border-top-color: var(--doux); opacity: .75; }
+  .epreuve .options { display: grid; gap: 8px; }
+  .epreuve .options label { display: flex; gap: 8px; align-items: center; padding: 8px 10px; border: 1px solid var(--bord); border-radius: 9px; cursor: pointer; flex-wrap: wrap; }
+  .epreuve .options label:has(input:checked) { border-color: var(--prim-2); background: color-mix(in srgb, var(--prim-2) 8%, transparent); }
+  .commande { display: flex; gap: 8px; align-items: center; margin-top: auto; }
+  .commande code { flex: 1; overflow-wrap: anywhere; }
+  .filtres { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filtres button.actif { background: var(--prim); border-color: var(--prim); color: #fff; }
+  .histo { width: 100%; border-collapse: collapse; }
+  .histo td { padding: 11px 8px; border-top: 1px solid var(--bord); vertical-align: middle; }
+  .histo tr:hover td { background: var(--carte-2); }
+  .histo td.actions { text-align: right; white-space: nowrap; }
+  .vide { text-align: center; padding: 30px; color: var(--doux); }
+
+  /* exercice */
+  .barre-ex { position: sticky; top: 60px; z-index: 10; background: var(--fond); padding: 10px 0; margin: -10px 0 12px; }
+  .grille { display: grid; grid-template-columns: 5fr 7fr; gap: 20px; align-items: start; }
+  .theme { position: sticky; top: 124px; max-height: calc(100vh - 140px); overflow: auto; white-space: pre-wrap; text-align: justify; line-height: 1.7; }
+  .rang { display: grid; grid-template-columns: 1fr 1fr 36px; gap: 8px; margin-bottom: 8px; }
+  .timer { display: inline-flex; align-items: center; gap: 4px; padding: 4px 6px 4px 12px; border-radius: 99px; background: var(--carte); border: 1px solid var(--bord); font-variant-numeric: tabular-nums; }
+  .timer b { font-size: 1.05rem; min-width: 70px; text-align: center; }
+  .timer.fini b { color: var(--ko); } .timer.fini { border-color: var(--ko); }
+  .timer button { border: 0; padding: 4px 8px; background: none; }
+  .section { border-top: 1px solid var(--bord); padding: 10px 0; }
+  details summary { cursor: pointer; font-weight: 650; color: var(--prim-2); padding: 6px 0; }
+
+  /* tiroir documents */
+  .tiroir { position: fixed; top: 60px; right: 0; bottom: 0; width: min(760px, 96vw); background: var(--carte); border-left: 1px solid var(--bord);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, .15); z-index: 30; display: flex; flex-direction: column; transform: translateX(105%); transition: transform .2s; }
+  .tiroir.ouvert { transform: none; }
+  .tiroir .tete { padding: 12px 16px; border-bottom: 1px solid var(--bord); }
+  .tiroir iframe { flex: 1; border: 0; width: 100%; background: #fff; }
+  .docs { display: grid; gap: 8px; }
+  .doc { display: flex; gap: 10px; align-items: center; padding: 9px 12px; border: 1px solid var(--bord); border-radius: 9px; }
+
+  /* statistiques */
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; margin-bottom: 18px; }
+  .kpi { margin: 0; } .kpi .v { font-size: 1.9rem; font-weight: 750; } .kpi .l { color: var(--doux); font-size: .82rem; text-transform: uppercase; letter-spacing: .04em; }
+  .barres { display: grid; gap: 10px; }
+  .barre { display: grid; grid-template-columns: 170px 1fr 60px; gap: 10px; align-items: center; font-size: .9rem; }
+  .piste { display: flex; height: 12px; border-radius: 99px; overflow: hidden; background: var(--carte-2); }
+  .piste span { height: 100%; } .s-ok { background: var(--ok); } .s-partiel { background: var(--moyen); } .s-faux { background: var(--ko); } .s-prim { background: var(--prim-2); }
+  .colonnes { display: flex; align-items: flex-end; gap: 8px; height: 150px; border-bottom: 1px solid var(--bord); padding-top: 18px; }
+  .colonnes div { flex: 1; max-width: 46px; background: var(--prim-2); border-radius: 6px 6px 0 0; position: relative; }
+  .colonnes div span { position: absolute; top: -18px; width: 100%; text-align: center; font-size: .72rem; color: var(--doux); }
+  .deux { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 18px; }
+
+  #toast { position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 20px); opacity: 0; transition: .2s; background: var(--texte); color: var(--fond); padding: 10px 18px; border-radius: 10px; z-index: 50; pointer-events: none; max-width: 90vw; }
+  #toast.visible { opacity: 1; transform: translate(-50%, 0); }
+  @media (max-width: 900px) {
+    header { padding: 0 14px; gap: 12px; } nav a { padding: 6px 9px; }
+    .grille, .rang { grid-template-columns: 1fr; } .theme { position: static; max-height: none; }
+    .barre { grid-template-columns: 1fr; } .histo td.actions { white-space: normal; }
+  }
 </style>
 </head>
 <body>
-<header><a href="#">Infraction Finder · Examen OPJ</a></header>
+<header>
+  <a class="logo" href="#">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="rgba(255,255,255,.12)"/><path d="M16 6v20M9 11h14M9 11l-3 7h6zM23 11l-3 7h6z" stroke="#f2c14e" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>
+    <span>OPJ <b>Master</b></span>
+  </a>
+  <nav>
+    <a href="#" data-nav="exercices">Exercices</a>
+    <a href="#stats" data-nav="stats">Statistiques</a>
+    <a href="#documents" data-nav="documents">Documents</a>
+  </nav>
+</header>
 <main id="vue"></main>
+<aside class="tiroir" id="tiroir" aria-label="Documents"></aside>
+<div id="toast" role="status" aria-live="polite"></div>
 <script>
 "use strict";
 const vue = document.getElementById("vue");
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-// Site statique (GitHub Pages) : sujets et corrections sont des fichiers du dépôt, la copie vit dans le navigateur
+const toast = (msg) => { const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("visible"); clearTimeout(toast.m); toast.m = setTimeout(() => t.classList.remove("visible"), 2600); };
+const copier = (texte, msg) => navigator.clipboard.writeText(texte).then(() => toast(msg || "Copié"), () => prompt("Copie ce texte :", texte));
+
+// Site statique (GitHub Pages) : sujets et corrections sont des fichiers du dépôt ; copie, timer et documents vivent dans le navigateur
 const lireJson = (chemin) => fetch(chemin, { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
-const copieLocale = (id) => { try { return JSON.parse(localStorage.getItem("copie:" + id)); } catch { return null; } };
-const ecrireCopie = (id, copie) => { try { localStorage.setItem("copie:" + id, JSON.stringify(copie)); } catch { /* stockage indisponible */ } };
+const local = {
+  lire(cle, defaut = null) { try { return JSON.parse(localStorage.getItem(cle)) ?? defaut; } catch { return defaut; } },
+  ecrire(cle, val) { try { val == null ? localStorage.removeItem(cle) : localStorage.setItem(cle, JSON.stringify(val)); } catch { /* stockage indisponible */ } },
+};
 async function chargerSujet(id) {
   const [sujet, corr, copieFichier] = await Promise.all([lireJson(`data/sujets/${id}.json`), lireJson(`data/corrections/${id}.json`), lireJson(`data/copies/${id}.json`)]);
   if (!sujet) return {};
-  const copie = copieLocale(id) || copieFichier;
+  const copie = local.lire("copie:" + id) || copieFichier;
+  sujet.epreuve ||= "dps";
   sujet.statut = corr ? "corrige" : copie?.rendue_le ? "rendu" : copie ? "en_cours" : "nouveau";
   if (!corr) delete sujet.corrige; // le corrigé n'est affiché qu'après la correction
   return { sujet, corr, copie };
 }
+const chargerTous = async () => {
+  const masques = local.lire("masques", []);
+  const ids = ((await lireJson("data/sujets/index.json")) || []).filter((id) => !masques.includes(id));
+  return (await Promise.all(ids.map(chargerSujet))).filter((x) => x.sujet);
+};
 const commandeCorriger = (id, copie) => `/corriger ${id} ${JSON.stringify(copie)}`;
+
+// Ajouter une épreuve (PP) = une entrée ici + son formulaire dans exercice()
+const EPREUVES = {
+  dps: { nom: "DPG / DPS", long: "Droit pénal général et spécial", duree: 120, desc: "Trouver les infractions, les qualifier et justifier leurs éléments légal, matériel et moral." },
+  crt: { nom: "CRT", long: "Compte rendu téléphonique", duree: 60, desc: "Rédiger le compte rendu au procureur de la République en 5 blocs (1 à 3 infractions)." },
+  pp: { nom: "Procédure pénale", long: "Procédure pénale", duree: 240, desc: "Qualification, déroulé d'enquête et questions pratiques.", bientot: true },
+};
 const STATUT = { nouveau: "Nouveau", en_cours: "En cours", rendu: "Terminé", corrige: "Corrigé" };
-const EPREUVE = { dps: "DPG / DPS", crt: "CRT" };
 const ICONE = { ok: "✅", partiel: "⚠️", faux: "❌" };
 const nouvelleInfraction = () => ({ infraction: "", qualification: "", mis_en_cause: "", element_legal: "", elements_materiels: [{ element: "", justification: "" }], element_moral: { type: "", justification: "" } });
 // Les 5 blocs du CRT (méthodologie CRT 2026) ; les actes d'enquête se divisent en réalisés / à réaliser
@@ -65,41 +173,187 @@ const BLOCS_CRT = [
   ["actes_a_realiser", "4. Actes d'enquête à réaliser (4 pts)", "Actes envisagés, motivés : réquisitions, auditions, GAV, perquisitions…"],
   ["qualification", "5. Qualification des infractions (4 pts)", "Infractions susceptibles d'être relevées à l'encontre de … : libellé avec circonstances aggravantes, délit ou crime, prévu et réprimé par les articles…"],
 ];
-
-/* ---------- Accueil : lancer un exercice + liste ---------- */
-async function accueil() {
-  const ids = (await lireJson("data/sujets/index.json")) || [];
-  const sujets = (await Promise.all(ids.map(async (id) => (await chargerSujet(id)).sujet))).filter(Boolean);
-  vue.innerHTML = `
-    <div class="carte">
-      <h2 style="margin-top:0">Lancer un exercice</h2>
-      <p class="ligne"><b>DPG / DPS</b>
-        <label><input type="radio" name="type" value="unitaire" checked> Unitaire (1 infraction)</label>
-        <label><input type="radio" name="type" value="multiple"> Multiple : entre
-          <input type="number" id="min" value="2" min="2" max="8"> et <input type="number" id="max" value="4" min="2" max="8"> infractions</label></p>
-      <p class="ligne"><b>CRT</b> <label><input type="radio" name="type" value="crt"> Compte rendu téléphonique (1 à 3 infractions)</label></p>
-      <p class="ligne">Colle cette commande dans Claude Code, puis actualise la page une à deux minutes plus tard :
-        <code id="cmd"></code><button id="copier">Copier</button></p>
-    </div>
-    <div class="carte"><h2 style="margin-top:0">Mes exercices</h2>
-      ${sujets.length ? sujets.map((s) => `<p class="ligne"><span class="badge ${s.statut}">${STATUT[s.statut]}</span>
-        <span class="badge">${EPREUVE[s.epreuve || "dps"]}</span><a href="#${s.id}">${esc(s.titre)}</a>
-        ${s.statut === "rendu" ? `<span class="doux">en attente de correction</span>` : ""}</p>`).join("") : `<p class="doux">Aucun exercice pour l'instant.</p>`}
-    </div>`;
-  const cmd = () => {
-    const type = vue.querySelector("[name=type]:checked").value;
-    let min = +vue.querySelector("#min").value, max = +vue.querySelector("#max").value;
-    if (max < min) [min, max] = [max, min];
-    return { unitaire: "/exercice unitaire", multiple: `/exercice multiple ${min}-${max}`, crt: "/exercice crt" }[type];
-  };
-  const maj = () => (vue.querySelector("#cmd").textContent = cmd());
-  vue.oninput = maj;
-  vue.onclick = null;
-  vue.querySelector("#copier").onclick = () => navigator.clipboard.writeText(cmd()).catch(() => prompt("Copie :", cmd()));
-  maj();
+const dureeEpreuve = (ep) => local.lire("duree:" + ep, EPREUVES[ep].duree);
+const fmtTemps = (s) => { const n = Math.abs(Math.round(s)), h = Math.floor(n / 3600), m = Math.floor(n % 3600 / 60), x = n % 60;
+  return (s < 0 ? "+" : "") + (h ? `${h}:${String(m).padStart(2, "0")}` : m) + ":" + String(x).padStart(2, "0"); };
+// Note sur 20 : celle de la correction (CRT), sinon le taux de réussite des sections (✅ = 1, ⚠️ = 0,5)
+function note20(corr) {
+  const m = String(corr?.note || "").match(/([\d]+(?:[.,]\d+)?)\s*\/\s*20/);
+  if (m) return parseFloat(m[1].replace(",", "."));
+  const s = (corr?.sections || []).filter((x) => ICONE[x.statut]);
+  return s.length ? Math.round(s.reduce((t, x) => t + ({ ok: 1, partiel: .5 }[x.statut] || 0), 0) / s.length * 200) / 10 : null;
 }
 
-/* ---------- Correction et corrigé (une fois /corriger passé) ---------- */
+/* ================= Accueil ================= */
+async function accueil() {
+  const tous = await chargerTous();
+  let filtre = local.lire("filtre", "tous");
+  vue.innerHTML = `
+    <h1>Bonjour 👮</h1>
+    <p class="sous-titre">Choisis une épreuve, génère un sujet avec Claude, compose, envoie, et retrouve ta correction ici.</p>
+    <div class="epreuves">
+      <section class="carte epreuve dps">
+        <div class="ligne"><h2 style="margin:0">${EPREUVES.dps.long}</h2><span class="espace"></span><span class="badge">⏱ ${dureeEpreuve("dps")} min</span></div>
+        <p class="doux" style="margin:0">${EPREUVES.dps.desc}</p>
+        <div class="options">
+          <label><input type="radio" name="dps" value="unitaire" checked> Unitaire · 1 infraction</label>
+          <label><input type="radio" name="dps" value="multiple"> Multiple · entre
+            <input type="number" id="min" value="2" min="2" max="8"> et <input type="number" id="max" value="4" min="2" max="8"> infractions</label>
+        </div>
+        <div class="commande"><code id="cmd-dps"></code><button class="prim" data-copier="cmd-dps">Copier</button></div>
+      </section>
+      <section class="carte epreuve crt">
+        <div class="ligne"><h2 style="margin:0">${EPREUVES.crt.long}</h2><span class="espace"></span><span class="badge">⏱ ${dureeEpreuve("crt")} min</span></div>
+        <p class="doux" style="margin:0">${EPREUVES.crt.desc}</p>
+        <div class="options"><label><input type="radio" checked disabled> Sujet d'examen · 1 à 3 infractions</label></div>
+        <div class="commande"><code id="cmd-crt">/exercice crt</code><button class="prim" data-copier="cmd-crt">Copier</button></div>
+      </section>
+      <section class="carte epreuve pp">
+        <div class="ligne"><h2 style="margin:0">${EPREUVES.pp.long}</h2><span class="espace"></span><span class="badge">Bientôt</span></div>
+        <p class="doux" style="margin:0">${EPREUVES.pp.desc}</p>
+      </section>
+    </div>
+    <p class="doux" style="margin-top:-12px">Colle la commande dans Claude Code : le sujet apparaît ci-dessous une à deux minutes plus tard.</p>
+    <section class="carte">
+      <div class="ligne" style="margin-bottom:6px"><h2 style="margin:0">Historique</h2><span class="espace"></span>
+        <div class="filtres">${[["tous", "Tous"], ...Object.entries(EPREUVES).filter(([, e]) => !e.bientot).map(([k, e]) => [k, e.nom])]
+          .map(([k, l]) => `<button class="mini ${k === filtre ? "actif" : ""}" data-filtre="${k}">${l}</button>`).join("")}</div></div>
+      <div id="historique"></div>
+    </section>`;
+
+  const histo = () => {
+    const liste = tous.filter(({ sujet }) => filtre === "tous" || sujet.epreuve === filtre);
+    document.getElementById("historique").innerHTML = liste.length ? `<table class="histo"><tbody>${liste.map(({ sujet: s, corr, copie }) => `
+      <tr><td><span class="badge b-${s.statut}">${STATUT[s.statut]}</span></td>
+        <td><span class="badge">${EPREUVES[s.epreuve]?.nom || s.epreuve}</span>${copie?.entrainement ? ` <span class="badge" title="Documents consultés">📚</span>` : ""}</td>
+        <td style="width:100%"><a href="#${s.id}"><b>${esc(s.titre)}</b></a><div class="doux">${esc(s.cree_le || "")}</div></td>
+        <td class="doux">${s.statut === "corrige" && note20(corr) != null ? `<b>${String(note20(corr)).replace(".", ",")}</b>/20` : ""}</td>
+        <td class="actions"><button class="icone mini" data-partager="${s.id}" title="Partager">🔗</button>
+          <button class="icone mini" data-supprimer="${s.id}" title="Supprimer">🗑</button></td></tr>`).join("")}</tbody></table>`
+      : `<div class="vide">Aucun exercice ici pour l'instant.</div>`;
+  };
+  const cmdDps = () => {
+    if (vue.querySelector("[name=dps]:checked").value === "unitaire") return "/exercice unitaire";
+    let min = +vue.querySelector("#min").value, max = +vue.querySelector("#max").value;
+    if (max < min) [min, max] = [max, min];
+    return `/exercice multiple ${min}-${max}`;
+  };
+  const maj = () => (document.getElementById("cmd-dps").textContent = cmdDps());
+  vue.oninput = maj;
+  vue.onchange = null;
+  vue.onclick = (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    const d = b.dataset;
+    if (d.copier) copier(document.getElementById(d.copier).textContent, "Commande copiée : colle-la dans Claude Code");
+    else if (d.filtre) { filtre = d.filtre; local.ecrire("filtre", filtre); vue.querySelectorAll("[data-filtre]").forEach((x) => x.classList.toggle("actif", x === b)); histo(); }
+    else if (d.partager) partager(d.partager);
+    else if (d.supprimer) {
+      if (!confirm("Supprimer cet exercice de ton historique ?\n\nSa copie et son timer seront effacés de ce navigateur. Pour le retirer aussi du site, colle ensuite la commande copiée dans Claude Code.")) return;
+      local.ecrire("masques", [...local.lire("masques", []), d.supprimer]);
+      local.ecrire("copie:" + d.supprimer, null);
+      local.ecrire("timer:" + d.supprimer, null);
+      tous.splice(tous.findIndex((x) => x.sujet.id === d.supprimer), 1);
+      histo();
+      copier(`/supprimer ${d.supprimer}`, "Supprimé. Commande /supprimer copiée pour l'effacer aussi du site.");
+    }
+  };
+  maj();
+  histo();
+}
+function partager(id) {
+  const lien = location.origin + location.pathname + "#" + id;
+  if (navigator.share) navigator.share({ title: "OPJ Master", text: "Un exercice d'entraînement à l'examen OPJ", url: lien }).catch(() => {});
+  else copier(lien, "Lien de l'exercice copié");
+}
+
+/* ================= Timer ================= */
+function monterTimer(el, id, epreuve, verrouille) {
+  const etat = local.lire("timer:" + id) || { total: dureeEpreuve(epreuve) * 60, ecoule: 0, depuis: null };
+  const ecoule = () => etat.ecoule + (etat.depuis ? (Date.now() - etat.depuis) / 1000 : 0);
+  const sauver = () => local.ecrire("timer:" + id, etat);
+  const afficher = () => {
+    const reste = etat.total - ecoule();
+    el.className = "timer" + (reste < 0 ? " fini" : "");
+    el.innerHTML = `<span title="Temps restant">⏱</span><b>${fmtTemps(reste)}</b>${verrouille ? "" : `
+      <button data-t="go" title="${etat.depuis ? "Pause" : "Démarrer"}">${etat.depuis ? "⏸" : "▶"}</button>
+      <button data-t="raz" title="Réinitialiser">↺</button><button data-t="regler" title="Régler la durée">⚙</button>`}`;
+    if (reste < 0 && etat.depuis && !etat.alerte) { etat.alerte = true; sauver(); toast("⏱ Temps écoulé !"); }
+  };
+  el.onclick = (e) => {
+    const t = e.target.dataset.t;
+    if (t === "go") { etat.depuis ? (etat.ecoule = ecoule(), etat.depuis = null) : (etat.depuis = Date.now()); }
+    else if (t === "raz") Object.assign(etat, { ecoule: 0, depuis: null, alerte: false });
+    else if (t === "regler") {
+      const min = parseInt(prompt(`Durée de l'épreuve ${EPREUVES[epreuve].nom}, en minutes (devient la durée par défaut) :`, Math.round(etat.total / 60)), 10);
+      if (!(min > 0)) return;
+      local.ecrire("duree:" + epreuve, min);
+      Object.assign(etat, { total: min * 60, alerte: false });
+    } else return;
+    sauver();
+    afficher();
+  };
+  afficher();
+  const tic = setInterval(afficher, 1000);
+  return { stop: () => { clearInterval(tic); if (etat.depuis) { etat.ecoule = ecoule(); etat.depuis = null; sauver(); } }, ecoule };
+}
+
+/* ================= Documents (PDF stockés dans le navigateur, jamais publiés) ================= */
+const db = () => new Promise((ok, ko) => {
+  const r = indexedDB.open("opj-master", 1);
+  r.onupgradeneeded = () => r.result.createObjectStore("docs", { keyPath: "id", autoIncrement: true });
+  r.onsuccess = () => ok(r.result); r.onerror = () => ko(r.error);
+});
+const docsOp = async (mode, fn) => { const base = await db(); return new Promise((ok, ko) => {
+  const req = fn(base.transaction("docs", mode).objectStore("docs")); req.onsuccess = () => ok(req.result); req.onerror = () => ko(req.error); }); };
+const listerDocs = () => docsOp("readonly", (s) => s.getAll());
+
+async function documents() {
+  const docs = await listerDocs().catch(() => []);
+  vue.innerHTML = `
+    <h1>Documents</h1>
+    <p class="sous-titre">Tes PDF (méthodologies, guides, fiches) pour le mode entraînement. Ils restent <b>dans ce navigateur</b> : rien n'est publié sur le site.</p>
+    <section class="carte">
+      <h2>Ajouter des PDF</h2>
+      <div class="ligne"><select id="doc-epreuve" style="width:auto">
+          <option value="tous">Toutes les épreuves</option>${Object.entries(EPREUVES).map(([k, e]) => `<option value="${k}">${e.nom}</option>`).join("")}</select>
+        <input type="file" id="doc-fichiers" accept="application/pdf" multiple style="width:auto;flex:1"></div>
+    </section>
+    ${[["tous", "Toutes les épreuves"], ...Object.entries(EPREUVES).map(([k, e]) => [k, e.nom])].map(([k, l]) => {
+      const liste = docs.filter((d) => d.epreuve === k);
+      return liste.length ? `<section class="carte"><h2>${l}</h2><div class="docs">${liste.map((d) => `
+        <div class="doc">📄 <span style="flex:1">${esc(d.nom)}</span><span class="doux">${Math.round(d.fichier.size / 1024)} Ko</span>
+          <button class="mini" data-ouvrir="${d.id}">Ouvrir</button><button class="mini icone" data-suppr-doc="${d.id}" title="Supprimer">🗑</button></div>`).join("")}</div></section>` : "";
+    }).join("") || `<div class="carte vide">Aucun document. Ajoute tes PDF ci-dessus.</div>`}`;
+  vue.oninput = null;
+  vue.onchange = async (e) => {
+    if (e.target.id !== "doc-fichiers") return;
+    const epreuve = document.getElementById("doc-epreuve").value;
+    for (const f of e.target.files) await docsOp("readwrite", (s) => s.add({ nom: f.name, epreuve, fichier: f }));
+    toast(`${e.target.files.length} document(s) ajouté(s)`);
+    documents();
+  };
+  vue.onclick = async (e) => {
+    const d = e.target.dataset;
+    if (d.ouvrir) window.open(URL.createObjectURL(docs.find((x) => x.id === +d.ouvrir).fichier));
+    else if (d.supprDoc && confirm("Supprimer ce document de ce navigateur ?")) { await docsOp("readwrite", (s) => s.delete(+d.supprDoc)); documents(); }
+  };
+}
+
+async function ouvrirTiroir(epreuve, auPremierUsage) {
+  const tiroir = document.getElementById("tiroir");
+  const docs = (await listerDocs().catch(() => [])).filter((d) => d.epreuve === epreuve || d.epreuve === "tous");
+  tiroir.innerHTML = `<div class="tete"><div class="ligne"><b>📚 Documents · ${EPREUVES[epreuve].nom}</b><span class="espace"></span><button class="mini" data-fermer>Fermer</button></div>
+    ${docs.length ? `<div class="docs" style="margin-top:10px">${docs.map((d) => `<button class="mini" data-voir="${d.id}" style="justify-content:flex-start">📄 ${esc(d.nom)}</button>`).join("")}</div>`
+      : `<p class="doux">Aucun document pour cette épreuve. Ajoute-les dans l'onglet <a href="#documents">Documents</a>.</p>`}</div><iframe title="Document"></iframe>`;
+  tiroir.classList.add("ouvert");
+  tiroir.onclick = (e) => {
+    if (e.target.dataset.fermer != null) tiroir.classList.remove("ouvert");
+    if (e.target.dataset.voir) { tiroir.querySelector("iframe").src = URL.createObjectURL(docs.find((x) => x.id === +e.target.dataset.voir).fichier); auPremierUsage(); }
+  };
+}
+
+/* ================= Correction et corrigé ================= */
 function vueCorrection(sujet, corr) {
   const corrige = sujet.epreuve === "crt"
     ? BLOCS_CRT.map(([k, l]) => `<div class="section"><b>${l}</b><div class="pre">${esc(sujet.corrige?.[k])}</div></div>`).join("")
@@ -107,29 +361,30 @@ function vueCorrection(sujet, corr) {
         <div><i>Élément légal :</i> ${esc(c.element_legal)}</div>
         <div><i>Élément matériel :</i><ul>${c.elements_materiels.map((m) => `<li>${esc(m.element)} — <span class="doux">${esc(m.justification)}</span></li>`).join("")}</ul></div>
         <div><i>Élément moral :</i> ${esc(c.element_moral.type)} — <span class="doux">${esc(c.element_moral.justification)}</span></div></div>`).join("");
+  const n = note20(corr);
   return `
-    <div class="carte">
-      <h2 style="margin-top:0">Correction ${corr.note ? `· ${esc(corr.note)}` : ""}</h2>
+    <div class="carte" style="border-left:4px solid var(--ok)">
+      <div class="ligne"><h2 style="margin:0">Correction</h2><span class="espace"></span>${n != null ? `<span style="font-size:1.6rem;font-weight:750">${String(n).replace(".", ",")}<span class="doux">/20</span></span>` : ""}</div>
       <p>${esc(corr.bilan)}</p>
-      ${(corr.sections || []).map((s) => `<div class="section"><b class="${s.statut}">${ICONE[s.statut] || ""} ${esc(s.titre)}</b>
-        ${s.points ? `<span class="badge">${esc(s.points)}</span>` : ""}<div class="pre">${esc(s.commentaire)}</div></div>`).join("")}
+      ${(corr.sections || []).map((s) => `<div class="section"><div class="ligne"><b class="${s.statut}">${ICONE[s.statut] || ""} ${esc(s.titre)}</b>
+        ${s.points ? `<span class="badge">${esc(s.points)}</span>` : ""}</div><div class="pre">${esc(s.commentaire)}</div></div>`).join("")}
       ${(corr.conseils || []).length ? `<p><b>Conseils</b></p><ul>${corr.conseils.map((c) => `<li>${esc(c)}</li>`).join("")}</ul>` : ""}
-      <details><summary><b>Voir le corrigé</b></summary>${corrige}
+      <details><summary>Voir le corrigé</summary>${corrige}
         ${(sujet.pieges || []).length ? `<p><b>Pièges</b></p><ul>${sujet.pieges.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>` : ""}</details>
     </div>`;
 }
 
-/* ---------- Exercice : thème + réponses ---------- */
+/* ================= Exercice ================= */
 async function exercice(id) {
   const { sujet, corr, copie: copieLue } = await chargerSujet(id);
-  if (!sujet) return accueil();
+  if (!sujet) { toast("Exercice introuvable"); location.hash = ""; return; }
   const crt = sujet.epreuve === "crt";
   const copie = crt ? { blocs: {}, ...copieLue } : { reponses: [], ...copieLue };
   if (!crt && !copie.reponses.length) copie.reponses.push(nouvelleInfraction());
   const lecture = sujet.statut === "rendu" || sujet.statut === "corrige";
   const dis = lecture ? "disabled" : "";
   let minuteur;
-  const sauver = () => { clearTimeout(minuteur); minuteur = setTimeout(() => ecrireCopie(id, copie), 400); };
+  const sauver = () => { clearTimeout(minuteur); minuteur = setTimeout(() => local.ecrire("copie:" + id, copie), 400); };
 
   const champ = (chemin, val, ph, ta = true) => ta
     ? `<textarea data-c="${chemin}" placeholder="${esc(ph)}" ${dis}>${esc(val)}</textarea>`
@@ -137,8 +392,8 @@ async function exercice(id) {
 
   const formDps = () => copie.reponses.map((r, i) => `
     <div class="carte">
-      <div class="ligne"><b>Infraction ${i + 1}</b>
-        ${!lecture && copie.reponses.length > 1 ? `<button data-suppr="${i}" style="margin-left:auto">Supprimer</button>` : ""}</div>
+      <div class="ligne"><h3>Infraction ${i + 1}</h3><span class="espace"></span>
+        ${!lecture && copie.reponses.length > 1 ? `<button class="mini" data-suppr="${i}">Supprimer</button>` : ""}</div>
       <label class="titre">Infraction</label>
       <div class="rang">${champ(`reponses.${i}.infraction`, r.infraction, "Ex. : vol aggravé", false)}
         <select data-c="reponses.${i}.qualification" ${dis}>${["", "Crime", "Délit"].map((q) => `<option ${r.qualification === q ? "selected" : ""} value="${q}">${q || "Crime ou délit ?"}</option>`).join("")}</select>
@@ -150,8 +405,8 @@ async function exercice(id) {
       ${r.elements_materiels.map((m, j) => `<div class="rang">
         ${champ(`reponses.${i}.elements_materiels.${j}.element`, m.element, "Élément constitutif")}
         ${champ(`reponses.${i}.elements_materiels.${j}.justification`, m.justification, "Justification tirée du sujet")}
-        ${lecture ? "<span></span>" : `<button data-suppr-em="${i}.${j}" title="Supprimer">×</button>`}</div>`).join("")}
-      ${lecture ? "" : `<button data-ajout-em="${i}">+ élément</button>`}
+        ${lecture ? "<span></span>" : `<button class="icone" data-suppr-em="${i}.${j}" title="Supprimer">×</button>`}</div>`).join("")}
+      ${lecture ? "" : `<button class="mini" data-ajout-em="${i}">+ élément</button>`}
       <label class="titre">Élément moral</label>
       <div class="rang" style="grid-template-columns:1fr 2fr">
         <select data-c="reponses.${i}.element_moral.type" ${dis}>
@@ -165,12 +420,22 @@ async function exercice(id) {
     `<label class="titre">${l}</label>${champ(`blocs.${k}`, copie.blocs[k], ph)}`).join("")}</div>`;
 
   const rendre = () => {
+    timer?.stop();
     vue.innerHTML = `
-      <p class="ligne"><a class="btn" href="#">← Exercices</a><span class="badge">${EPREUVE[sujet.epreuve || "dps"]}</span>
-        <b>${esc(sujet.titre)}</b><span class="badge ${sujet.statut}">${STATUT[sujet.statut]}</span></p>
-      ${sujet.statut === "rendu" ? `<div class="carte">Exercice terminé. Colle cette commande (elle contient ta réponse) dans Claude Code, puis actualise la page une à deux minutes après la correction :
-        <textarea readonly id="cmd-corriger" style="margin-top:8px">${esc(commandeCorriger(id, copie))}</textarea>
-        <button id="copier-corriger">Copier</button></div>` : ""}
+      <div class="barre-ex ligne">
+        <a class="btn mini" href="#">← Exercices</a><span class="badge">${EPREUVES[sujet.epreuve].nom}</span>
+        <b>${esc(sujet.titre)}</b><span class="badge b-${sujet.statut}">${STATUT[sujet.statut]}</span>
+        ${copie.entrainement ? `<span class="badge" title="Documents consultés">📚 Entraînement</span>` : ""}
+        <span class="espace"></span>
+        <span id="timer"></span>
+        <button class="mini" id="docs">📚 Documents</button>
+        <button class="mini icone" data-partager="${id}" title="Partager">🔗</button>
+        ${lecture ? "" : `<button class="prim" id="envoyer">Envoyer ma réponse</button>`}
+      </div>
+      ${sujet.statut === "rendu" ? `<div class="carte" style="border-left:4px solid var(--or)">
+        <b>Exercice terminé.</b> Colle cette commande (elle contient ta réponse) dans Claude Code, puis reviens ici une à deux minutes après la correction.
+        <textarea readonly id="cmd-corriger" style="margin-top:10px">${esc(commandeCorriger(id, copie))}</textarea>
+        <button class="prim" id="copier-corriger" style="margin-top:8px">Copier la commande</button></div>` : ""}
       ${sujet.statut === "corrige" ? vueCorrection(sujet, corr) : ""}
       <div class="grille">
         <div class="carte theme">${esc(sujet.theme)}</div>
@@ -178,12 +443,16 @@ async function exercice(id) {
           ${crt ? formCrt() : formDps()}
           ${lecture ? "" : `<div class="ligne">
             ${sujet.type === "multiple" ? `<button id="ajout">+ Ajouter une infraction</button>` : ""}
-            <button class="prim" id="envoyer" style="margin-left:auto">Envoyer ma réponse</button></div>`}
+            <span class="espace"></span><button class="prim" id="envoyer-bas">Envoyer ma réponse</button></div>`}
         </div>
       </div>`;
     vue.querySelectorAll("textarea").forEach((t) => (t.style.height = t.scrollHeight + 2 + "px"));
+    timer = monterTimer(document.getElementById("timer"), id, sujet.epreuve, lecture);
   };
+  let timer = null;
+  nettoyage = () => { timer?.stop(); document.getElementById("tiroir").classList.remove("ouvert"); };
 
+  vue.onchange = null;
   vue.oninput = (e) => {
     const c = e.target.dataset.c;
     if (!c) return;
@@ -192,20 +461,24 @@ async function exercice(id) {
     sauver();
   };
   vue.onclick = async (e) => {
-    const d = e.target.dataset;
+    const b = e.target.closest("button");
+    if (!b) return;
+    const d = b.dataset;
     if (d.ajoutEm) copie.reponses[d.ajoutEm].elements_materiels.push({ element: "", justification: "" });
     else if (d.supprEm) { const [i, j] = d.supprEm.split("."); copie.reponses[i].elements_materiels.splice(j, 1); }
-    else if (d.suppr && confirm("Supprimer cette infraction ?")) copie.reponses.splice(d.suppr, 1);
-    else if (e.target.id === "ajout") copie.reponses.push(nouvelleInfraction());
-    else if (e.target.id === "envoyer") {
+    else if (d.suppr) { if (!confirm("Supprimer cette infraction ?")) return; copie.reponses.splice(d.suppr, 1); }
+    else if (b.id === "ajout") copie.reponses.push(nouvelleInfraction());
+    else if (d.partager) return partager(id);
+    else if (b.id === "docs") return ouvrirTiroir(sujet.epreuve, () => { if (!lecture && !copie.entrainement) { copie.entrainement = true; sauver(); } });
+    else if (b.id === "copier-corriger") return copier(commandeCorriger(id, copie), "Commande copiée : colle-la dans Claude Code");
+    else if (b.id === "envoyer" || b.id === "envoyer-bas") {
       if (!confirm("Envoyer ta réponse ? Elle ne pourra plus être modifiée.")) return;
       clearTimeout(minuteur);
+      copie.temps_s = Math.round(timer.ecoule());
       copie.rendue_le = new Date().toISOString().slice(0, 19);
-      ecrireCopie(id, copie);
-      navigator.clipboard?.writeText(commandeCorriger(id, copie)).catch(() => {});
+      local.ecrire("copie:" + id, copie);
+      copier(commandeCorriger(id, copie), "Réponse envoyée : la commande /corriger est copiée, colle-la dans Claude Code");
       return exercice(id);
-    } else if (e.target.id === "copier-corriger") {
-      return navigator.clipboard.writeText(commandeCorriger(id, copie)).catch(() => document.getElementById("cmd-corriger").select());
     } else return;
     sauver();
     rendre();
@@ -213,7 +486,53 @@ async function exercice(id) {
   rendre();
 }
 
-const routeur = () => (location.hash.length > 1 ? exercice(location.hash.slice(1)) : accueil());
+/* ================= Statistiques ================= */
+async function stats() {
+  const tous = await chargerTous();
+  const faits = tous.filter((x) => x.sujet.statut === "corrige");
+  const kpi = (v, l) => `<div class="carte kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`;
+  const moyenne = (l) => l.length ? (l.reduce((a, b) => a + b, 0) / l.length).toFixed(1).replace(".", ",") : "—";
+  const notes = faits.map((x) => note20(x.corr)).filter((n) => n != null);
+  const temps = tous.map((x) => x.copie?.temps_s).filter(Boolean);
+  const parEpreuve = Object.entries(EPREUVES).filter(([, e]) => !e.bientot).map(([k, e]) => {
+    const l = faits.filter((x) => x.sujet.epreuve === k);
+    const n = l.map((x) => note20(x.corr)).filter((v) => v != null);
+    return `<section class="carte"><h2>${e.long}</h2>
+      <div class="ligne doux">${l.length} corrigé(s) · moyenne <b style="color:var(--texte)">${moyenne(n)}/20</b> · ${tous.filter((x) => x.sujet.epreuve === k && x.sujet.statut !== "corrige").length} en attente</div>
+      ${n.length ? `<div class="colonnes">${l.map((x) => { const v = note20(x.corr); return v == null ? "" : `<div style="height:${Math.max(3, v * 5)}%" title="${esc(x.sujet.titre)}"><span>${String(v).replace(".", ",")}</span></div>`; }).reverse().join("")}</div>
+        <p class="doux">Notes dans l'ordre chronologique (sur 20).</p>` : `<p class="doux">Pas encore de note.</p>`}</section>`;
+  }).join("");
+  // Réussite par type d'élément, d'après les titres des sections de correction
+  const TYPES = [["Qualification", /qualif/i], ["Élément légal", /légal/i], ["Élément matériel", /matériel/i], ["Élément moral", /moral/i],
+    ["Objet / cadre", /objet/i], ["Faits", /faits/i], ["Actes d'enquête", /actes/i], ["Pièges / oublis", /piège|oubli|en trop/i]];
+  const barres = TYPES.map(([nom, re]) => {
+    const s = faits.flatMap((x) => x.corr.sections || []).filter((x) => re.test(x.titre) && ICONE[x.statut]);
+    if (!s.length) return "";
+    const pct = (st) => s.filter((x) => x.statut === st).length / s.length * 100;
+    return `<div class="barre"><span>${nom}</span><div class="piste"><span class="s-ok" style="width:${pct("ok")}%"></span><span class="s-partiel" style="width:${pct("partiel")}%"></span><span class="s-faux" style="width:${pct("faux")}%"></span></div><span class="doux">${Math.round(pct("ok"))} % ✅</span></div>`;
+  }).join("");
+  vue.innerHTML = `
+    <h1>Statistiques</h1>
+    <p class="sous-titre">Calculées à partir de tes exercices corrigés.</p>
+    <div class="kpis">${kpi(faits.length, "Exercices corrigés")}${kpi(moyenne(notes) + '<span class="doux" style="font-size:1rem">/20</span>', "Moyenne générale")}
+      ${kpi(temps.length ? fmtTemps(temps.reduce((a, b) => a + b, 0) / temps.length) : "—", "Temps moyen par exercice")}
+      ${kpi(tous.filter((x) => x.copie?.entrainement).length + " / " + tous.filter((x) => x.copie?.rendue_le).length, "Faits en mode entraînement")}</div>
+    <div class="deux">${parEpreuve}</div>
+    <section class="carte"><h2>Réussite par type d'élément</h2>
+      ${barres ? `<div class="barres">${barres}</div><p class="doux">✅ juste · ⚠️ partiel · ❌ faux</p>` : `<div class="vide">Les statistiques apparaîtront après ta première correction.</div>`}</section>`;
+  vue.oninput = vue.onchange = vue.onclick = null;
+}
+
+/* ================= Routeur ================= */
+let nettoyage = null;
+function routeur() {
+  nettoyage?.(); nettoyage = null;
+  const h = location.hash.slice(1);
+  const page = h === "stats" ? "stats" : h === "documents" ? "documents" : h ? "exercice" : "exercices";
+  document.querySelectorAll("nav a").forEach((a) => a.classList.toggle("actif", a.dataset.nav === page || (page === "exercice" && a.dataset.nav === "exercices")));
+  window.scrollTo(0, 0);
+  ({ stats, documents, exercice: () => exercice(h), exercices: accueil })[page]();
+}
 window.onhashchange = routeur;
 routeur();
 </script>

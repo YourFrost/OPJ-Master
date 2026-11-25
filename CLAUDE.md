@@ -1,4 +1,4 @@
-# Infraction Finder
+# OPJ Master
 
 Entraînement aux épreuves de l'examen OPJ : **DPG / DPS** (recherche d'infractions) et **CRT** (compte rendu téléphonique au parquet). Tout est en français.
 
@@ -7,6 +7,9 @@ Entraînement aux épreuves de l'examen OPJ : **DPG / DPS** (recherche d'infract
 - `data/sujets/index.json` : liste des id d'exercices (le plus récent d'abord), à tenir à jour. `data/sujets/<id>.json` : écrit par Claude. Le corrigé y est lisible (dépôt public) mais la page ne l'affiche qu'une fois la correction publiée.
 - La copie de l'utilisateur vit dans son navigateur (`localStorage`). « Envoyer » produit la commande `/corriger <id> <copie JSON>` ; Claude l'enregistre dans `data/copies/<id>.json`, sans la modifier.
 - Statuts : nouveau → en cours → terminé (copie envoyée) → corrigé (`data/corrections/<id>.json` publié).
+- Dans le navigateur seulement : timer par exercice (durée par défaut et réglable : DPG/DPS 120 min, CRT 60 min), PDF ajoutés par l'utilisateur (onglet Documents, IndexedDB, jamais publiés), historique masqué. La copie envoyée porte `temps_s` (temps passé) et `entrainement: true` si des documents ont été consultés.
+- `/supprimer <id>` retire un exercice du site (sujet, copie, correction, entrée de `index.json`).
+- Ajouter l'épreuve de procédure pénale : une entrée dans `EPREUVES` (index.html, déjà prévue avec `bientot: true`), son formulaire dans `exercice()`, et ses règles dans `/exercice` et `/corriger`.
 - **Ne jamais publier `_ancien/`** (documentation en diffusion restreinte ; exclu par `.gitignore`).
 - Articles : texte **en vigueur** du Code pénal (et des autres codes) sur Légifrance. En cas de doute, vérifier ; ne jamais inventer un article ou un alinéa.
 
