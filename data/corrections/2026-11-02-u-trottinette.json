@@ -1,0 +1,34 @@
+{
+ "bilan": "Très bonne copie : bonne infraction, circonstance aggravante trouvée et pièges évités. Deux précisions manquent (alinéa de 312-5, justification de l'élément moral).",
+ "sections": [
+  {
+   "titre": "Extorsion aggravée – qualification",
+   "statut": "partiel",
+   "commentaire": "Non indiquée (le champ n'existait pas encore). C'est un CRIME : trente ans de réclusion criminelle (art. 312-5)."
+  },
+  {
+   "titre": "Extorsion aggravée – élément légal",
+   "statut": "partiel",
+   "commentaire": "Bons articles (132-75, 312-1, 312-5). 312-5 se cite « alinéa 1 » (l'alinéa 2 concerne la période de sûreté). Forme attendue : articles 132-75, 312-1 et 312-5 alinéa 1 du Code pénal."
+  },
+  {
+   "titre": "Extorsion aggravée – élément matériel",
+   "statut": "ok",
+   "commentaire": "Remise du bien, menace de violences et menace d'une arme : tout y est. Le geste décisif est que Lucas MONTRE le couteau pour appuyer la menace. Tu aurais pu ajouter qu'Hugo est « terrorisé »."
+  },
+  {
+   "titre": "Extorsion aggravée – élément moral",
+   "statut": "partiel",
+   "commentaire": "« Infraction intentionnelle » : juste. Justification trop générale : cite l'aveu « c'était juste pour lui faire peur et qu'il me la donne »."
+  },
+  {
+   "titre": "Pièges",
+   "statut": "ok",
+   "commentaire": "Pas de vol (c'est la victime qui remet le bien), pas de menaces de mort autonomes (elles sont le moyen de l'extorsion)."
+  }
+ ],
+ "conseils": [
+  "Indique l'alinéa dès qu'un article en compte plusieurs (312-5 al. 1, 311-5 al. 1…).",
+  "Pour l'élément moral, cite une phrase précise du sujet (aveu, geste préparé)."
+ ]
+}

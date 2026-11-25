@@ -1,0 +1,31 @@
+{
+ "id": "2026-11-02-u-trottinette",
+ "titre": "Lucas et la trottinette",
+ "type": "unitaire",
+ "nb_min": 1,
+ "nb_max": 1,
+ "cree_le": "2026-11-02",
+ "theme": "Le 30 octobre 2026, vers 17 h 30, Hugo, âgé de vingt ans, attend son bus à l'arrêt « Mairie » de la commune de Mont. Il tient à la main sa trottinette électrique, achetée 450 euros le mois précédent.\n\nLucas, âgé de vingt-deux ans, s'approche de lui. Il ouvre sa veste et laisse apparaître le manche d'un couteau glissé dans sa ceinture, puis lui dit à voix basse : « Tu me donnes ta trottinette, sinon je te plante. Et pas un mot, je sais où tu habites. » Hugo, terrorisé, lui tend sa trottinette sans rien dire. Lucas s'en va avec, en direction du centre-ville.\n\nUne heure plus tard, Hugo se présente à la brigade de gendarmerie de Mont et dépose plainte. Il remet la facture de la trottinette.\n\nLe 1er novembre 2026, Lucas est interpellé alors qu'il circule sur la trottinette d'Hugo, dont le numéro de série correspond à celui de la facture. Un couteau à cran d'arrêt est découvert dans sa poche. Entendu, Lucas déclare : « Je voulais sa trottinette. Je ne l'aurais jamais piqué avec le couteau, c'était juste pour lui faire peur et qu'il me la donne. »",
+ "corrige": [
+  {
+   "mis_en_cause": "Lucas",
+   "infraction": "Extorsion aggravée (avec usage ou menace d'une arme)",
+   "qualification": "Crime",
+   "element_legal": "Articles 132-75 (définition de l'arme), 312-1 (définition et peine de l'extorsion) et 312-5 alinéa 1 (extorsion commise avec usage ou menace d'une arme : trente ans de réclusion criminelle) du Code pénal — vérifié sur Légifrance le 2 novembre 2026.",
+   "elements_materiels": [
+    { "element": "Des violences, menaces de violences ou une contrainte", "justification": "Lucas montre le manche d'un couteau et dit : « Tu me donnes ta trottinette, sinon je te plante » ; Hugo est terrorisé." },
+    { "element": "En vue d'obtenir la remise d'un bien quelconque", "justification": "Hugo remet lui-même sa trottinette électrique (valeur 450 euros) à Lucas, qui part avec." },
+    { "element": "Circonstance aggravante : avec menace d'une arme", "justification": "Le couteau glissé dans la ceinture est montré pour appuyer la menace ; un couteau à cran d'arrêt est découvert sur Lucas lors de son interpellation." }
+   ],
+   "element_moral": {
+    "type": "Infraction intentionnelle",
+    "justification": "Lucas a conscience d'obtenir par la menace ce qu'Hugo n'aurait pas remis librement : « Je voulais sa trottinette… c'était juste pour lui faire peur et qu'il me la donne. »"
+   }
+  }
+ ],
+ "pieges": [
+  "Vol avec arme : non, car c'est la victime qui remet elle-même le bien sous la contrainte ; dans le vol, l'auteur s'empare de la chose (soustraction).",
+  "Menaces de mort (« je te plante ») : elles ne sont pas une infraction autonome ici, car elles constituent le moyen de l'extorsion.",
+  "L'intention de ne pas utiliser le couteau ne fait pas disparaître la circonstance aggravante : la menace d'une arme suffit."
+ ]
+}

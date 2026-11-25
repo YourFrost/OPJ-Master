@@ -1,0 +1,30 @@
+{
+ "reponses": [
+  {
+   "infraction": "Extorsion aggravée",
+   "mis_en_cause": "Lucas",
+   "element_legal": "Article 312-1, Alinéa 1 et 312-5 et 132-75 du code pénal",
+   "elements_materiels": [
+    {
+     "element": "Obtenir la remise d'un bien quelconque",
+     "justification": "Lucas a obtenu la trottinette électrique d'Hugo"
+    },
+    {
+     "element": "Par la menace de violence",
+     "justification": "Lucas a menacer de planter Hugo s'il ne lui donnait pas sa trottinette"
+    },
+    {
+     "element": "Avec la menace d'une arme dont le port est prohibé",
+     "justification": "Lucas est porteur d'un couteau à cran d'arrêt et la montré à Hugo lors de ses menaces "
+    }
+   ],
+   "element_moral": {
+    "type": "Infraction intentionnelle",
+    "justification": "Lucas voulais la trottinette d'Hugo et a conscience de l'aspect illégal de son geste."
+   }
+  }
+ ],
+ "rendre": true,
+ "sujet_id": "2026-11-02-u-trottinette",
+ "maj_le": "2026-11-02T22:03:57"
+}
