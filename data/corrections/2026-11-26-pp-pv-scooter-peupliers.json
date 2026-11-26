@@ -1,0 +1,41 @@
+{
+ "note": "0 / 20",
+ "bilan": "Bon fond : le cadre est juste, les éléments de fond sont fidèles et l'inscription au FPR mentionne le procureur. Mais l'enquête de voisinage à Romas, hors de ton ressort, ne mentionne pas l'extension de compétence. C'est une erreur majeure : 0 à cet acte et à l'acte suivant, puis −10 points, ce qui ramène la note à 0. Sans cette erreur, tu aurais eu environ 18,5 / 26, soit 14 / 20.",
+ "sections": [
+  {
+   "titre": "Cadre d'enquête",
+   "statut": "partiel",
+   "points": "4 / 5",
+   "commentaire": "✅ Enquête préliminaire : juste, puisque plus de 24 h séparent les faits de la plainte.\n✅ Compétence : art. 18, al. 1 et R. 15-24 du CPP, juste.\n⚠️ Cadre légal : il manque les articles 20 et 21-1 du CPP, à citer dès qu'un APJ participe à l'enquête (le gendarme Lima est présent aux investigations). −0,5.\n⚠️ Justification : les faits se sont produits « entre le 10 novembre à 20 h 00 et le 11 novembre à 07 h 30 », et non « au plus tôt le 11 ». Indique aussi l'heure de la saisine (14 novembre, 09 h 00) et la référence à l'art. 53 du CPP. −0,5."
+  },
+  {
+   "titre": "Procès-verbal d'investigations (vidéoprotection, SIV, TAJ)",
+   "statut": "partiel",
+   "points": "5 / 7",
+   "commentaire": "✅ Date, lieu, présence de l'APJ « assisté de » et éléments de fond : complets et fidèles.\n⚠️ Enquêteur : il manque le nom (« Mdl/Chef Alpha »). −0,25.\n⚠️ Cadre légal : 17 et 15-5, c'est juste, mais la mention « agent expressément habilité » est exigée dans chaque PVI de consultation de fichiers. −1.\n⚠️ Motivation : elle ne vise que la vidéo. Il faut aussi acter les consultations du SIV et du TAJ, et les nommer dans les éléments de fond. −0,75."
+  },
+  {
+   "titre": "Erreur majeure – Procès-verbal d'investigations (enquête de voisinage à Romas)",
+   "statut": "faux",
+   "points": "0 / 7",
+   "commentaire": "❌ L'acte est réalisé à Romas (groupement et TJ de Romas), hors de ton ressort habituel. Il fallait mentionner l'extension de compétence dans le cadre légal : « Art. 18, al. 3 du CPP : information préalable du procureur de la République de Dalis ; information de l'OPJ territorialement compétent ». L'absence de cette mention est une ERREUR MAJEURE (« Tous les PV : défaut de mention de l'extension de compétence ») : 0 à l'acte, 0 aux actes suivants et −10 sur la partie Q2.\nDe plus, le lieu de rédaction indiqué est « MONT » : c'est « Romas », là où l'acte est réalisé."
+  },
+  {
+   "titre": "Procès-verbal d'investigations (inscription au FPR) – acte subséquent",
+   "statut": "partiel",
+   "points": "0 / 7",
+   "commentaire": "Noté 0 car il suit l'erreur majeure (convention de formation : les actes suivants tombent aussi).\nSur le fond, sans cette erreur, il aurait valu environ 5,5 / 7 :\n✅ Information/autorisation du procureur pour l'inscription au FPR, bien vue.\n⚠️ Il manque « agent expressément habilité » (consultation et inscription au FPR) et le nom de l'OPJ.\n⚠️ Coquille : « MARCHEL » au lieu de « MARCHAL »."
+  },
+  {
+   "titre": "Total Q2 après erreur majeure",
+   "statut": "faux",
+   "points": "0 / 26",
+   "commentaire": "4 (cadre) + 5 (PVI vidéo) + 0 + 0 = 9 points, moins 10 pour l'erreur majeure, soit −1 : la note est ramenée à 0 (pas de note négative). Sans l'erreur majeure : environ 18,5 / 26."
+  }
+ ],
+ "conseils": [
+  "À chaque acte, vérifie le lieu sur le schéma des circonscriptions. Dès que tu sors de ton ressort, écris dans le cadre légal : « Art. 18, al. 3 du CPP : information préalable du PR saisi ; information de l'OPJ territorialement compétent ».",
+  "Dans tout PV d'investigations qui consulte ou alimente un fichier (SIV, TAJ, FPR, FOVES…), écris « Agent expressément habilité » sous les articles 17 et 15-5.",
+  "Dès qu'un APJ participe à l'enquête, ajoute les articles 20 et 21-1 du CPP dans le cadre légal du cadre d'enquête."
+ ]
+}
