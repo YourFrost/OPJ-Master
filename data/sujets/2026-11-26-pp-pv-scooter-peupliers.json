@@ -1,0 +1,65 @@
+{
+ "id": "2026-11-26-pp-pv-scooter-peupliers",
+ "epreuve": "pp",
+ "titre": "PV d'investigations – Le scooter de la rue des Écoles",
+ "type": "pv",
+ "cree_le": "2026-11-26",
+ "duree_minutes": 70,
+ "points": { "q2": 26 },
+ "theme": "Mdl/Chef Alpha, officier de police judiciaire (OPJ), vous exercez vos fonctions à la communauté de brigades (CoB) de Mont (1), groupement et tribunal judiciaire (TJ) de Dalis (2). Le gendarme Lima est agent de police judiciaire (APJ) dans votre unité.\n\nLe 14 novembre 2026 à 09 h 00, Sandrine Bodin, âgée de trente-quatre ans, se présente à la brigade de proximité (BP) de Mont et dépose plainte pour le vol de son scooter Yamaha bleu, immatriculé AB-731-ZT, stationné devant son domicile, 5 rue des Écoles à Mont. Elle l'a vu pour la dernière fois le 10 novembre 2026 à 20 h 00 et a constaté sa disparition le lendemain à 07 h 30. Le procureur de la République vous demande de poursuivre l'enquête.\n\nLe 18 novembre 2026 à 10 h 00, à la BP de Mont, assisté du gendarme Lima, vous exploitez les images de la vidéoprotection de la commune, remises par la mairie. Le 10 novembre 2026 à 23 h 40, elles montrent un homme vêtu d'une doudoune noire pousser le scooter bleu de la rue des Écoles jusqu'à une camionnette blanche, immatriculée EF-552-RT, dans laquelle il le charge avant de partir. Le système d'immatriculation des véhicules (SIV) indique que la camionnette appartient à Steven Marchal, né le 3 mai 1996 à Dalis, domicilié 9 rue des Peupliers à Romas. Le traitement d'antécédents judiciaires (TAJ) révèle qu'il est connu pour des vols de deux-roues commis en 2025.\n\nLe même jour à 15 h 00, assisté du gendarme Lima, vous vous rendez rue des Peupliers à Romas pour effectuer une enquête de voisinage. Personne ne répond au domicile de Steven Marchal. Odette Garnier, sa voisine, vous déclare verbalement : « Il est parti avec un grand sac il y a quatre ou cinq jours, il a dit qu'il allait chez un copain dans le Sud. Avant de partir, il a rangé un scooter bleu dans son garage, je l'ai vu par la porte entrouverte. Sa camionnette n'est plus là depuis. »\n\nLe 19 novembre 2026 à 09 h 00, à la BP de Mont, constatant que Steven Marchal demeure introuvable, vous procédez à son inscription au fichier des personnes recherchées (FPR).\n\n(1) Cf. schéma des circonscriptions : la CoB de Mont relève du groupement et du TJ de Dalis ; Romas relève du groupement et du TJ de Romas, limitrophe de celui de Dalis.\n(2) Le magistrat référent est le procureur de la République de Dalis. Tout avis à un magistrat extérieur sera mentionné explicitement.",
+ "questions": {
+  "q2": {
+   "consigne": "Présentez de façon chronologique et analytique, sous forme de tableau, le cadre d'enquête correspondant au sujet, ainsi que les procès-verbaux d'investigations, conformément à la méthodologie de l'épreuve pratique de procédure pénale. Sauf mention contraire, les protagonistes sont considérés comme étant majeurs.",
+   "pv_a_rediger": ["Cadre d'enquête", "Procès-verbal d'investigations du 18 novembre 2026 à 10 h 00", "Procès-verbal d'investigations du 18 novembre 2026 à 15 h 00", "Procès-verbal d'investigations du 19 novembre 2026 à 09 h 00"],
+   "pv_a_ne_pas_rediger": ["Audition de la victime (14 novembre)", "Réquisition à la mairie pour les images de vidéoprotection"]
+  }
+ },
+ "corrige": {
+  "q2": [
+   {
+    "type": "cadre", "points": 5, "cadre_juridique": "ep",
+    "cadre_legal": "Art. 16 à 19, 20 et 21-1, 75 à 78 du CPP.",
+    "justification": "Nous sommes saisis le 14 novembre 2026 à 09 h 00 par la plainte de Sandrine Bodin, et les faits se sont produits entre le 10 novembre 2026 à 20 h 00 et le 11 novembre 2026 à 07 h 30. Les faits ne viennent pas de se commettre : ils n'entrent pas dans le cas de la flagrance prévu à l'article 53 du CPP.",
+    "competence": "Les faits se déroulent sur la commune de Mont, placée dans le ressort territorial où le Mdl/Chef Alpha exerce ses fonctions habituelles (art. 18, al. 1 et R. 15-24 du CPP).",
+    "nota": "Plus de 24 heures entre les faits et la saisine : enquête préliminaire (convention de la méthodologie). 20 et 21-1 car le gendarme Lima, APJ, participe aux investigations. Barème indicatif : cadre juridique et légal 1,5 ; justification 2 ; compétence 1,5."
+   },
+   {
+    "type": "pv", "acte": "investigations", "points": 7,
+    "intitule": "investigations (exploitation de la vidéoprotection, consultation du SIV et du TAJ)",
+    "date_heure_lieu": "Le 18 novembre 2026 à 10 h 00, à Mont (BP de Mont).",
+    "enqueteurs": "Mdl/Chef Alpha, OPJ à la CoB de Mont, assisté du gendarme Lima, APJ à la CoB de Mont.",
+    "cadre_legal": "Art. 17 et 15-5 du CPP.\n- Agent expressément habilité.",
+    "motivation": "Il s'agit d'acter en procédure le résultat de l'exploitation des images de vidéoprotection de la commune et des consultations du SIV et du TAJ.",
+    "elements_de_fond": "- Vidéoprotection : le 10 novembre 2026 à 23 h 40, un homme vêtu d'une doudoune noire pousse le scooter Yamaha bleu de la rue des Écoles jusqu'à une camionnette blanche immatriculée EF-552-RT, l'y charge et quitte les lieux.\n- SIV : la camionnette EF-552-RT appartient à Steven Marchal, né le 03/05/1996 à Dalis, domicilié 9 rue des Peupliers à Romas.\n- TAJ : Steven Marchal est connu pour des vols de deux-roues commis en 2025.",
+    "nota": "Barème indicatif : date et enquêteurs 1 ; cadre légal avec la mention de l'habilitation 2 ; motivation 1 ; éléments de fond 3. La mention « agent expressément habilité » doit figurer dans CHAQUE PVI de consultation de fichiers, pas une fois pour toute l'enquête."
+   },
+   {
+    "type": "pv", "acte": "investigations", "points": 7,
+    "intitule": "investigations (enquête de voisinage au domicile de Steven Marchal, 9 rue des Peupliers à Romas)",
+    "date_heure_lieu": "Le 18 novembre 2026 à 15 h 00, à Romas.",
+    "enqueteurs": "Mdl/Chef Alpha, OPJ à la CoB de Mont, assisté du gendarme Lima, APJ à la CoB de Mont.",
+    "cadre_legal": "Art. 17 du CPP.\nArt. 18, al. 3 du CPP (extension de compétence) : information préalable du procureur de la République de Dalis ; information de l'OPJ territorialement compétent de Romas.",
+    "motivation": "Il s'agit d'effectuer une enquête de voisinage au domicile de Steven Marchal, propriétaire de la camionnette utilisée lors du vol.",
+    "elements_de_fond": "- Transport au 9 rue des Peupliers à Romas : personne ne répond au domicile de Steven Marchal.\n- Odette Garnier, voisine, déclare verbalement : « Il est parti avec un grand sac il y a quatre ou cinq jours, il a dit qu'il allait chez un copain dans le Sud. Avant de partir, il a rangé un scooter bleu dans son garage, je l'ai vu par la porte entrouverte. Sa camionnette n'est plus là depuis. »",
+    "nota": "Romas est hors du ressort habituel de l'OPJ (TJ et groupement de Romas) : extension de compétence de l'art. 18, al. 3 du CPP, à mentionner dans l'acte. Son absence est une erreur majeure (« Tous les PV »). Le TJ de Romas étant limitrophe de celui de Dalis, l'information du procureur de Romas n'est pas requise. Le sujet ne mentionne pas d'assistance demandée par le procureur. Pas de consultation de fichier, donc pas de mention d'habilitation. Barème indicatif : date et enquêteurs 1 ; cadre légal et extension de compétence 3 ; motivation 1 ; éléments de fond 2."
+   },
+   {
+    "type": "pv", "acte": "investigations", "points": 7,
+    "intitule": "investigations (inscription de Steven Marchal au fichier des personnes recherchées)",
+    "date_heure_lieu": "Le 19 novembre 2026 à 09 h 00, à Mont (BP de Mont).",
+    "enqueteurs": "Mdl/Chef Alpha, OPJ à la CoB de Mont.",
+    "cadre_legal": "Art. 17 et 15-5 du CPP.\n- Agent expressément habilité.\n- Information du procureur de la République de Dalis (inscription au FPR).",
+    "motivation": "Il s'agit d'acter en procédure l'inscription au FPR de Steven Marchal, mis en cause demeurant introuvable.",
+    "elements_de_fond": "- Steven Marchal, né le 03/05/1996 à Dalis, demeurant 9 rue des Peupliers à Romas, n'a pu être localisé : selon sa voisine, il a quitté son domicile depuis quatre ou cinq jours pour une destination inconnue « dans le Sud ».\n- Inscription au FPR de Steven Marchal (conduite à tenir : en cas de découverte, aviser le Mdl/Chef Alpha, CoB de Mont, dans le cadre de l'enquête préliminaire pour vol).",
+    "nota": "Pour une inscription au FPR, le sujet ne précise pas l'information ou l'autorisation du magistrat : le candidat doit y penser. Son absence est une erreur mineure selon la méthodologie. Barème indicatif : date et enquêteur 1 ; cadre légal (habilitation et information du PR) 2,5 ; motivation 1 ; éléments de fond 2,5."
+   }
+  ]
+ },
+ "pieges": [
+  "Cadre : enquête préliminaire et non flagrance. Les faits remontent à la nuit du 10 au 11 novembre, et la plainte date du 14.",
+  "Le PVI de Romas est réalisé hors ressort : l'extension de compétence (art. 18, al. 3 du CPP) doit figurer dans l'acte, sinon c'est une erreur majeure.",
+  "La mention « agent expressément habilité » (art. 15-5 du CPP) est à reprendre dans chaque PVI de consultation de fichiers (SIV, TAJ, FPR), mais pas dans l'enquête de voisinage.",
+  "L'inscription au FPR appelle la mention de l'information du procureur de la République.",
+  "Le gendarme Lima ne rédige aucun acte ici : pas de mention « sous le contrôle de l'OPJ » à prévoir, mais il figure en « assisté de »."
+ ]
+}
