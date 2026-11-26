@@ -345,7 +345,7 @@ function monterTimer(el, id, epreuve, verrouille, dureeSujet) {
   };
   afficher();
   const tic = setInterval(afficher, 1000);
-  return { stop: () => { clearInterval(tic); if (etat.depuis) { etat.ecoule = ecoule(); etat.depuis = null; sauver(); } }, ecoule };
+  return { stop: () => clearInterval(tic), ecoule };
 }
 
 /* ================= Documents (PDF stockés dans le navigateur, jamais publiés) ================= */
@@ -508,7 +508,9 @@ async function exercice(id) {
   let minuteur;
   const sauver = () => { clearTimeout(minuteur); minuteur = setTimeout(() => local.ecrire("copie:" + id, copie), 400); };
 
-  const champ = (chemin, val, ph, ta = true) => ta
+  // Pas d'indice dans les cases : seuls les libellés neutres restent en texte indicatif
+  const NEUTRES = ["Élément constitutif", "Justification tirée du sujet", "À l'encontre de…", "Mis en cause"];
+  const champ = (chemin, val, ph, ta = true) => (ph = NEUTRES.includes(ph) ? ph : "", ta)
     ? `<textarea data-c="${chemin}" placeholder="${esc(ph)}" ${dis}>${esc(val)}</textarea>`
     : `<input data-c="${chemin}" value="${esc(val)}" placeholder="${esc(ph)}" ${dis}>`;
 
