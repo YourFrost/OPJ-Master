@@ -1,6 +1,6 @@
 # OPJ Master
 
-Entraînement aux épreuves de l'examen OPJ : **DPG / DPS** (recherche d'infractions) et **CRT** (compte rendu téléphonique au parquet). Tout est en français.
+Entraînement aux épreuves de l'examen OPJ : **DPG / DPS** (recherche d'infractions), **CRT** (compte rendu téléphonique au parquet) et **PP** (procédure pénale). Tout est en français.
 
 - **Site statique** publié par GitHub Pages : https://yourfrost.github.io/OPJ-Master/ (dépôt public `YourFrost/OPJ-Master`, branche `main`, racine). Page unique : `index.html`. Version locale hors ligne : `Lancer Infraction Finder.bat` (`python -m http.server`).
 - Aucune API d'IA : **Claude génère les exercices (`/exercice`) et les corrige (`/corriger`)**, puis fait `git add`, `git commit` et `git push` pour publier. Le site se met à jour 1 à 2 minutes après le push.
@@ -9,7 +9,9 @@ Entraînement aux épreuves de l'examen OPJ : **DPG / DPS** (recherche d'infract
 - Statuts : nouveau → en cours → terminé (copie envoyée) → corrigé (`data/corrections/<id>.json` publié).
 - Dans le navigateur seulement : timer par exercice (durée par défaut et réglable : DPG/DPS 120 min, CRT 60 min), PDF ajoutés par l'utilisateur (onglet Documents, IndexedDB, jamais publiés), historique masqué. La copie envoyée porte `temps_s` (temps passé) et `entrainement: true` si des documents ont été consultés.
 - `/supprimer <id>` retire un exercice du site (sujet, copie, correction, entrée de `index.json`).
-- Ajouter l'épreuve de procédure pénale : une entrée dans `EPREUVES` (index.html, déjà prévue avec `bientot: true`), son formulaire dans `exercice()`, et ses règles dans `/exercice` et `/corriger`.
+- Procédure pénale : format du sujet et barème dans `/exercice` et `/corriger`. Sources lues en local seulement (voir ces commandes).
+- **Documentation chiffrée** : `data/docs.chiffre.json` contient GPS, TACL, erreurs majeures, méthodologies et GPI, chiffrés en AES-GCM ; le mot de passe n'est **jamais** écrit dans le dépôt. Pour régénérer : `node outils/chiffrer_docs.mjs "mot de passe"`. L'onglet Documents permet de chercher dedans une fois le mot de passe saisi.
+- **Formulaires PDF** : `formulaires/Formulaire_10x_a_remplir.pdf` (imprimés vierges). Pour une copie rendue en `"mode": "pdf"`, lire les PDF joints avec `python outils/lire_formulaire.py`.
 - **Ne jamais publier `_ancien/`** (documentation en diffusion restreinte ; exclu par `.gitignore`).
 - Articles : texte **en vigueur** du Code pénal (et des autres codes) sur Légifrance. En cas de doute, vérifier ; ne jamais inventer un article ou un alinéa.
 

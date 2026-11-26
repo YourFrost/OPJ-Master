@@ -159,8 +159,41 @@ const commandeCorriger = (id, copie) => `/corriger ${id} ${JSON.stringify(copie)
 const EPREUVES = {
   dps: { nom: "DPG / DPS", long: "Droit pénal général et spécial", duree: 120, desc: "Trouver les infractions, les qualifier et justifier leurs éléments légal, matériel et moral." },
   crt: { nom: "CRT", long: "Compte rendu téléphonique", duree: 60, desc: "Rédiger le compte rendu au procureur de la République en 5 blocs (1 à 3 infractions)." },
-  pp: { nom: "Procédure pénale", long: "Procédure pénale", duree: 240, desc: "Qualification, déroulé d'enquête et questions pratiques.", bientot: true },
+  pp: { nom: "Procédure pénale", long: "Procédure pénale", duree: 240, desc: "Qualification, déroulé d'enquête (cadres et procès-verbaux) et questions pratiques." },
 };
+// Imprimés officiels à remplir (mode « formulaire PDF ») selon l'épreuve
+const FORMULAIRES = { dps: ["102"], crt: ["101"], pp: ["101", "103"] };
+
+/* ---- Procédure pénale : cadres et 25 procès-verbaux du GPS, rubriques de la méthodologie PP ---- */
+const CADRES_PP = [["ep", "Enquête préliminaire"], ["fd", "Enquête de flagrance"], ["cr", "Commission rogatoire"], ["dc", "Découverte de cadavre"],
+  ["dpgb", "Découverte de personne grièvement blessée"], ["di", "Disparition inquiétante"], ["rpf", "Recherche de personne en fuite"]];
+const PV_PP = [["tcmp", "Transport, constatations et mesures prises"], ["perquisition", "Perquisition"], ["saisie", "Saisie"], ["saisie_incidente", "Saisie incidente"],
+  ["bris_scelle", "Bris de scellé et restitution ou destruction"], ["audition_victime", "Audition de victime"], ["audition_representant_legal", "Audition du représentant légal"],
+  ["audition_temoin", "Audition de témoin"], ["audition_anonymat", "Audition sous couvert d'anonymat"], ["audition_libre", "Notification des droits et audition libre"],
+  ["retenue_judiciaire", "Retenue judiciaire (10-13 ans)"], ["gav_mineur", "Garde à vue (mineur 13-18 ans)"], ["gav_majeur", "Garde à vue (majeur)"],
+  ["investigations", "Investigations"], ["interpellation", "Interpellation et remise à l'OPJ"], ["assistance_autopsie", "Assistance autopsie"],
+  ["req_prestataire", "Réquisition à prestataire de service"], ["req_personne_qualifiee", "Réquisition à personne qualifiée"], ["req_remise_informations", "Réquisition aux fins de remise d'informations"],
+  ["req_autorite_militaire", "Réquisition à autorité militaire"], ["req_geolocalisation", "Réquisition de géolocalisation"], ["req_sonorisation", "Réquisition de sonorisation et fixation d'images"],
+  ["req_interception", "Réquisition d'interception"], ["transcription", "Transcription"], ["mandats", "Notification et exécution d'un mandat"]];
+const nomPv = (k) => PV_PP.find((p) => p[0] === k)?.[1] || k;
+const RUB_CADRE = [["cadre_legal", "Cadre légal", "Art. … du CPP"], ["justification", "Justification", "Nous sommes saisis le (date) à (heure) et les faits se sont produits le…"],
+  ["competence", "Compétence de l'OPJ", "Les faits se déroulent sur la commune de …, placée dans le ressort… (art. 18, al. 1 et R. 15-24 du CPP)"]];
+function rubriquesPv(acte) {
+  const R = { date_heure_lieu: ["Date, heure et lieu", "Le (date) à (heure), à (lieu)"], enqueteurs: ["Enquêteur(s)", "Grade, nom, qualité, unité – assisté de… / sous le contrôle de l'OPJ…"],
+    cadre_legal: ["Cadre légal", "Art. … du CPP + mentions (présence, assentiment, autorisation, extension de compétence…)"], motivation: ["Motivation", "Il s'agit de…"],
+    saisine: ["Saisine", "Nécessité de… suite à (appel du CORG, plainte…) le (date) à (heure)"], notification_droits: ["Notification des droits", "… reçoit notification de ses droits."],
+    elements_de_fond: ["Éléments de fond", "Résultats de l'acte et conséquences"] };
+  const r = (k, l, ph) => [k, l || R[k][0], ph || R[k][1]];
+  const base = [r("date_heure_lieu"), r("enqueteurs"), r("cadre_legal")];
+  if (acte === "tcmp") return [...base, r("saisine"), r("elements_de_fond", null, "SITUATION À L'ARRIVÉE · MESURES PRISES · ÉTAT DES LIEUX · CORPS DU DÉLIT · MESURES DIVERSES")];
+  if (acte === "audition_victime" || acte === "audition_representant_legal") return [...base, r("motivation"), r("notification_droits"), r("elements_de_fond", null, "Identité… / déclare : « … »")];
+  if (acte === "audition_libre") return [...base, r("motivation"), r("notification_droits"), ["deroulement", "Déroulement de l'audition", "Information PR/JI, exercice des droits…"], r("elements_de_fond", null, "Déclarations")];
+  if (/^gav|retenue/.test(acte)) return [["duree", "Durée de la mesure", "Ex. : 8 heures 30"], r("date_heure_lieu", "Date et heure du début de la mesure, lieu"), r("enqueteurs", "Mesure prise et notifiée par", "Grade, nom, OPJ, unité"),
+    r("cadre_legal"), r("motivation", null, "Raisons plausibles de soupçonner… objectifs de l'art. 62-2"), r("notification_droits", null, "Placement, durée, infraction (qualification, date, lieu), motif, droits, art. 803-6…"),
+    ["deroulement", "Déroulement de la mesure", "Information PR/JI sans délai…, droits exercés, repos/repas/auditions, fouille, prélèvements, fin de mesure…"], r("elements_de_fond", null, "Le mis en cause déclare : « … »")];
+  if (acte === "mandats") return [...base, r("saisine"), r("notification_droits"), ["deroulement", "Déroulement de la mise à exécution", "…"], r("elements_de_fond")];
+  return [...base, r("motivation"), r("elements_de_fond")];
+}
 const STATUT = { nouveau: "Nouveau", en_cours: "En cours", rendu: "Terminé", corrige: "Corrigé" };
 const ICONE = { ok: "✅", partiel: "⚠️", faux: "❌" };
 const nouvelleInfraction = () => ({ infraction: "", qualification: "", mis_en_cause: "", element_legal: "", elements_materiels: [{ element: "", justification: "" }], element_moral: { type: "", justification: "" } });
@@ -209,8 +242,17 @@ async function accueil() {
         <div class="commande"><code id="cmd-crt">/exercice crt</code><button class="prim" data-copier="cmd-crt">Copier</button></div>
       </section>
       <section class="carte epreuve pp">
-        <div class="ligne"><h2 style="margin:0">${EPREUVES.pp.long}</h2><span class="espace"></span><span class="badge">Bientôt</span></div>
+        <div class="ligne"><h2 style="margin:0">${EPREUVES.pp.long}</h2><span class="espace"></span><span class="badge">⏱ ${dureeEpreuve("pp")} min</span></div>
         <p class="doux" style="margin:0">${EPREUVES.pp.desc}</p>
+        <div class="options">
+          <label><input type="radio" name="pp" value="complet" checked> Épreuve complète (examen blanc)</label>
+          <label><input type="radio" name="pp" value="pv"> PV au choix :
+            <select id="pp-pv" multiple size="4" style="margin-top:4px">${PV_PP.map(([k, l]) => `<option value="${k}">${l}</option>`).join("")}</select>
+            <span class="doux">Ctrl + clic pour en choisir plusieurs</span></label>
+          <label><input type="radio" name="pp" value="aleatoire"> Un PV au hasard</label>
+          <label><input type="radio" name="pp" value="cours"> Questions de cours</label>
+        </div>
+        <div class="commande"><code id="cmd-pp"></code><button class="prim" data-copier="cmd-pp">Copier</button></div>
       </section>
     </div>
     <p class="doux" style="margin-top:-12px">Colle la commande dans Claude Code : le sujet apparaît ci-dessous une à deux minutes plus tard.</p>
@@ -238,9 +280,17 @@ async function accueil() {
     if (max < min) [min, max] = [max, min];
     return `/exercice multiple ${min}-${max}`;
   };
-  const maj = () => (document.getElementById("cmd-dps").textContent = cmdDps());
+  const cmdPp = () => {
+    const f = vue.querySelector("[name=pp]:checked").value;
+    const pv = [...vue.querySelector("#pp-pv").selectedOptions].map((o) => o.textContent);
+    return f === "pv" ? `/exercice pp pv: ${pv.join(", ") || "(choisis au moins un PV)"}` : `/exercice pp ${f}`;
+  };
+  const maj = () => {
+    document.getElementById("cmd-dps").textContent = cmdDps();
+    document.getElementById("cmd-pp").textContent = cmdPp();
+  };
+  vue.onchange = (e) => { if (e.target.id === "pp-pv") { vue.querySelector("[name=pp][value=pv]").checked = true; maj(); } };
   vue.oninput = maj;
-  vue.onchange = null;
   vue.onclick = (e) => {
     const b = e.target.closest("button");
     if (!b) return;
@@ -268,8 +318,8 @@ function partager(id) {
 }
 
 /* ================= Timer ================= */
-function monterTimer(el, id, epreuve, verrouille) {
-  const etat = local.lire("timer:" + id) || { total: dureeEpreuve(epreuve) * 60, ecoule: 0, depuis: null };
+function monterTimer(el, id, epreuve, verrouille, dureeSujet) {
+  const etat = local.lire("timer:" + id) || { total: (dureeSujet || dureeEpreuve(epreuve)) * 60, ecoule: 0, depuis: null };
   const ecoule = () => etat.ecoule + (etat.depuis ? (Date.now() - etat.depuis) / 1000 : 0);
   const sauver = () => local.ecrire("timer:" + id, etat);
   const afficher = () => {
@@ -308,13 +358,68 @@ const docsOp = async (mode, fn) => { const base = await db(); return new Promise
   const req = fn(base.transaction("docs", mode).objectStore("docs")); req.onsuccess = () => ok(req.result); req.onerror = () => ko(req.error); }); };
 const listerDocs = () => docsOp("readonly", (s) => s.getAll());
 
+/* ---- Documentation protégée (GPS, TACL, méthodologies, GPI) : publiée chiffrée, déchiffrée ici avec le mot de passe ---- */
+let docsProteges = null;
+const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+async function deverrouiller(mdp) {
+  const f = await lireJson("data/docs.chiffre.json");
+  if (!f) throw new Error("Documentation introuvable");
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(mdp), "PBKDF2", false, ["deriveKey"]);
+  const cle = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(f.sel), iterations: f.iterations, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+  const gz = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(f.iv) }, cle, b64(f.donnees)); // lève une erreur si le mot de passe est faux
+  docsProteges = JSON.parse(await new Response(new Blob([gz]).stream().pipeThrough(new DecompressionStream("gzip"))).text());
+  try { sessionStorage.setItem("mdp-docs", mdp); } catch { /* stockage indisponible */ }
+}
+const sansAccent = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+function chercher(q) {
+  const termes = sansAccent(q).split(/\s+/).filter((t) => t.length > 1);
+  if (!termes.length) return [];
+  return docsProteges.map((d) => {
+    const t = sansAccent(d.titre + " " + d.texte);
+    if (!termes.every((x) => t.includes(x))) return null;
+    return { d, score: termes.reduce((s, x) => s + t.split(x).length - 1 + (sansAccent(d.titre).includes(x) ? 20 : 0), 0) };
+  }).filter(Boolean).sort((a, b) => b.score - a.score).slice(0, 30).map((x) => x.d);
+}
+const surligner = (texte, q) => sansAccent(q).split(/\s+/).filter((t) => t.length > 1).reduce((html, t) =>
+  html.replace(new RegExp(`(${t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").split("").map((c) => /[a-z]/.test(c) ? `[${c}${{ a: "àâä", e: "éèêë", i: "îï", o: "ôö", u: "ùûü", c: "ç" }[c] || ""}]` : c).join("")})`, "gi"), "<mark>$1</mark>"), esc(texte));
+const blocRecherche = () => `<div id="recherche"><div class="ligne"><input type="search" id="q-docs" placeholder="Rechercher dans le GPS, le TACL, les méthodologies, le GPI… (ex. : assentiment perquisition)" style="flex:1"></div>
+  <div id="res-docs" class="docs" style="margin-top:10px"></div></div>`;
+const blocDeverrouillage = () => `<form id="form-mdp" class="ligne"><input type="password" id="mdp-docs" placeholder="Mot de passe de la documentation" style="flex:1" autocomplete="current-password">
+  <button class="prim">Déverrouiller</button></form>`;
+async function brancherRecherche(racine, apres) {
+  if (!docsProteges) { const m = (() => { try { return sessionStorage.getItem("mdp-docs"); } catch { return null; } })(); if (m) await deverrouiller(m).catch(() => {}); }
+  const zone = racine.querySelector("#zone-recherche");
+  zone.innerHTML = docsProteges ? blocRecherche() : blocDeverrouillage();
+  if (!docsProteges) {
+    zone.querySelector("#form-mdp").onsubmit = async (e) => {
+      e.preventDefault();
+      try { await deverrouiller(zone.querySelector("#mdp-docs").value); toast("Documentation déverrouillée"); brancherRecherche(racine, apres); }
+      catch { toast("Mot de passe incorrect"); }
+    };
+    return;
+  }
+  zone.querySelector("#q-docs").oninput = (e) => {
+    const q = e.target.value;
+    zone.querySelector("#res-docs").innerHTML = q.trim().length < 2 ? "" : (chercher(q).map((d) => `<details class="doc" style="display:block">
+      <summary><span class="badge">${esc(d.source)}</span> ${surligner(d.titre, q)}</summary><div class="pre doux" style="margin-top:8px">${surligner(d.texte, q)}</div></details>`).join("")
+      || `<p class="doux">Aucun résultat.</p>`);
+    apres?.();
+  };
+}
+
 async function documents() {
   const docs = await listerDocs().catch(() => []);
   vue.innerHTML = `
     <h1>Documents</h1>
-    <p class="sous-titre">Tes PDF (méthodologies, guides, fiches) pour le mode entraînement. Ils restent <b>dans ce navigateur</b> : rien n'est publié sur le site.</p>
+    <p class="sous-titre">La documentation officielle (protégée par mot de passe) et tes PDF personnels en accès rapide.</p>
     <section class="carte">
-      <h2>Ajouter des PDF</h2>
+      <h2>🔎 Documentation de référence</h2>
+      <p class="doux" style="margin-top:-6px">GPS, TACL, erreurs majeures, méthodologies PP / CRT / DPG-DPS, GPI. Diffusion restreinte : chiffrée sur le site, déchiffrée dans ton navigateur.</p>
+      <div id="zone-recherche"></div>
+    </section>
+    <section class="carte">
+      <h2>Mes PDF</h2>
+      <p class="doux" style="margin-top:-6px">Ils restent <b>dans ce navigateur</b> : rien n'est publié sur le site.</p>
       <div class="ligne"><select id="doc-epreuve" style="width:auto">
           <option value="tous">Toutes les épreuves</option>${Object.entries(EPREUVES).map(([k, e]) => `<option value="${k}">${e.nom}</option>`).join("")}</select>
         <input type="file" id="doc-fichiers" accept="application/pdf" multiple style="width:auto;flex:1"></div>
@@ -338,24 +443,39 @@ async function documents() {
     if (d.ouvrir) window.open(URL.createObjectURL(docs.find((x) => x.id === +d.ouvrir).fichier));
     else if (d.supprDoc && confirm("Supprimer ce document de ce navigateur ?")) { await docsOp("readwrite", (s) => s.delete(+d.supprDoc)); documents(); }
   };
+  brancherRecherche(vue);
 }
 
 async function ouvrirTiroir(epreuve, auPremierUsage) {
   const tiroir = document.getElementById("tiroir");
   const docs = (await listerDocs().catch(() => [])).filter((d) => d.epreuve === epreuve || d.epreuve === "tous");
-  tiroir.innerHTML = `<div class="tete"><div class="ligne"><b>📚 Documents · ${EPREUVES[epreuve].nom}</b><span class="espace"></span><button class="mini" data-fermer>Fermer</button></div>
+  tiroir.innerHTML = `<div class="tete" style="max-height:60%;overflow:auto"><div class="ligne"><b>📚 Documents · ${EPREUVES[epreuve].nom}</b><span class="espace"></span><button class="mini" data-fermer>Fermer</button></div>
+    <div id="zone-recherche" style="margin-top:10px"></div>
     ${docs.length ? `<div class="docs" style="margin-top:10px">${docs.map((d) => `<button class="mini" data-voir="${d.id}" style="justify-content:flex-start">📄 ${esc(d.nom)}</button>`).join("")}</div>`
-      : `<p class="doux">Aucun document pour cette épreuve. Ajoute-les dans l'onglet <a href="#documents">Documents</a>.</p>`}</div><iframe title="Document"></iframe>`;
+      : `<p class="doux">Pas de PDF personnel pour cette épreuve (onglet <a href="#documents">Documents</a>).</p>`}</div><iframe title="Document" style="display:none"></iframe>`;
   tiroir.classList.add("ouvert");
+  brancherRecherche(tiroir, auPremierUsage);
   tiroir.onclick = (e) => {
     if (e.target.dataset.fermer != null) tiroir.classList.remove("ouvert");
-    if (e.target.dataset.voir) { tiroir.querySelector("iframe").src = URL.createObjectURL(docs.find((x) => x.id === +e.target.dataset.voir).fichier); auPremierUsage(); }
+    if (e.target.dataset.voir) { tiroir.querySelector("iframe").style.display = "block"; tiroir.querySelector("iframe").src = URL.createObjectURL(docs.find((x) => x.id === +e.target.dataset.voir).fichier); auPremierUsage(); }
   };
 }
 
 /* ================= Correction et corrigé ================= */
+// Lecture d'un bloc du déroulé d'enquête (copie ou corrigé)
+const blocPpLecture = (b) => b.type === "cadre"
+  ? `<div class="section"><b>Cadre d'enquête : ${esc(CADRES_PP.find((c) => c[0] === b.cadre_juridique)?.[1] || b.cadre_juridique)}</b>
+      ${RUB_CADRE.map(([k, l]) => b[k] ? `<div><i>${l} :</i> <span class="pre">${esc(b[k])}</span></div>` : "").join("")}${b.nota ? `<div class="doux">Nota : ${esc(b.nota)}</div>` : ""}</div>`
+  : `<div class="section"><b>Procès-verbal de ${esc(b.intitule || nomPv(b.acte))}</b>${b.points ? ` <span class="badge">${b.points} pt</span>` : ""}
+      ${rubriquesPv(b.acte).map(([k, l]) => b[k] ? `<div><i>${l} :</i> <span class="pre">${esc(b[k])}</span></div>` : "").join("")}${b.nota ? `<div class="doux">Nota : ${esc(b.nota)}</div>` : ""}</div>`;
+
 function vueCorrection(sujet, corr) {
-  const corrige = sujet.epreuve === "crt"
+  const C = sujet.corrige || {};
+  const corrige = sujet.epreuve === "pp"
+    ? `${(C.q1 || []).map((q) => `<div class="section"><b>Q1 · ${esc(q.mis_en_cause)}</b><div class="pre">${esc(q.texte)}</div></div>`).join("")}
+       ${(C.q2 || []).map(blocPpLecture).join("")}
+       ${(C.q3 || []).map((q, i) => `<div class="section"><b>Q3 · question ${i + 1}</b><div class="pre">${esc(q.reponse)}</div></div>`).join("")}`
+    : sujet.epreuve === "crt"
     ? BLOCS_CRT.map(([k, l]) => `<div class="section"><b>${l}</b><div class="pre">${esc(sujet.corrige?.[k])}</div></div>`).join("")
     : (sujet.corrige || []).map((c) => `<div class="section"><b>${esc(c.infraction)}</b> · ${esc(c.qualification)} · ${esc(c.mis_en_cause)}
         <div><i>Élément légal :</i> ${esc(c.element_legal)}</div>
@@ -378,9 +498,11 @@ function vueCorrection(sujet, corr) {
 async function exercice(id) {
   const { sujet, corr, copie: copieLue } = await chargerSujet(id);
   if (!sujet) { toast("Exercice introuvable"); location.hash = ""; return; }
-  const crt = sujet.epreuve === "crt";
-  const copie = crt ? { blocs: {}, ...copieLue } : { reponses: [], ...copieLue };
-  if (!crt && !copie.reponses.length) copie.reponses.push(nouvelleInfraction());
+  const ep = sujet.epreuve, Q = sujet.questions || {};
+  const copie = { ...{ dps: { reponses: [] }, crt: { blocs: {} }, pp: { q1: [], q2: [], q3: [] } }[ep], ...copieLue };
+  if (ep === "dps" && !copie.reponses.length) copie.reponses.push(nouvelleInfraction());
+  if (ep === "pp" && Q.q1 && !copie.q1.length) copie.q1.push({ mis_en_cause: (Q.q1.mis_en_cause || []).join(", "), texte: "" });
+  if (ep === "pp" && Q.q2 && !copie.q2.length) copie.q2.push({ type: "cadre", cadre_juridique: "" });
   const lecture = sujet.statut === "rendu" || sujet.statut === "corrige";
   const dis = lecture ? "disabled" : "";
   let minuteur;
@@ -419,6 +541,47 @@ async function exercice(id) {
   const formCrt = () => `<div class="carte">${BLOCS_CRT.map(([k, l, ph]) =>
     `<label class="titre">${l}</label>${champ(`blocs.${k}`, copie.blocs[k], ph)}`).join("")}</div>`;
 
+  const outilsBloc = (i) => lecture ? "" : `<span class="espace"></span><button class="icone mini" data-monter="${i}" title="Monter">↑</button>
+    <button class="icone mini" data-descendre="${i}" title="Descendre">↓</button><button class="icone mini" data-suppr-q2="${i}" title="Supprimer">×</button>`;
+  const blocPp = (b, i) => b.type === "cadre" ? `
+    <div class="carte" style="border-left:4px solid var(--prim)">
+      <div class="ligne"><h3>Cadre d'enquête</h3>${outilsBloc(i)}</div>
+      <label class="titre">Cadre juridique</label>
+      <select data-c="q2.${i}.cadre_juridique" ${dis}><option value="">— choisir —</option>${CADRES_PP.map(([k, l]) => `<option value="${k}" ${b.cadre_juridique === k ? "selected" : ""}>${l}</option>`).join("")}</select>
+      ${RUB_CADRE.map(([k, l, ph]) => `<label class="titre">${l}</label>${champ(`q2.${i}.${k}`, b[k], ph)}`).join("")}
+    </div>` : `
+    <div class="carte">
+      <div class="ligne"><span class="badge">PV n° ${copie.q2.slice(0, i + 1).filter((x) => x.type === "pv").length}</span><h3>${esc(nomPv(b.acte))}</h3>${outilsBloc(i)}</div>
+      <label class="titre">Procès-verbal de</label>${champ(`q2.${i}.intitule`, b.intitule, "Intitulé précis (objet, personne entendue, lieu…)", false)}
+      ${rubriquesPv(b.acte).map(([k, l, ph]) => `<label class="titre">${l}</label>${champ(`q2.${i}.${k}`, b[k], ph)}`).join("")}
+    </div>`;
+  const formPp = () => `
+    ${Q.q1 ? `<h2>Q1 · Qualification légale <span class="doux">/${sujet.points?.q1 ?? 4}</span></h2>
+      <p class="doux">${esc(Q.q1.consigne || "")} Une phrase par infraction : libellé (avec les circonstances aggravantes), délit ou crime, prévu et réprimé par les articles…</p>
+      ${copie.q1.map((it, i) => `<div class="carte"><div class="ligne"><b>À l'encontre de</b><span style="flex:1">${champ(`q1.${i}.mis_en_cause`, it.mis_en_cause, "Mis en cause", false)}</span>
+        ${lecture || copie.q1.length < 2 ? "" : `<button class="icone mini" data-suppr-q1="${i}">×</button>`}</div>
+        <div style="margin-top:8px">${champ(`q1.${i}.texte`, it.texte, "Vol commis dans un local d'habitation… délit prévu et réprimé par les articles … du Code pénal.")}</div></div>`).join("")}
+      ${lecture ? "" : `<button class="mini" data-ajout-q1>+ infraction</button>`}` : ""}
+    ${Q.q2 ? `<h2 style="margin-top:22px">Q2 · Déroulé d'enquête <span class="doux">/${sujet.points?.q2 ?? 26}</span></h2>
+      <p class="doux">${esc(Q.q2.consigne || "Présentez de façon chronologique et analytique le ou les cadres d'enquête et les procès-verbaux.")}</p>
+      ${(Q.q2.pv_a_rediger || []).length ? `<p class="doux"><b>PV à rédiger :</b> ${Q.q2.pv_a_rediger.map(esc).join(" · ")}</p>` : ""}
+      ${(Q.q2.pv_a_ne_pas_rediger || []).length ? `<p class="doux"><b>PV à ne pas rédiger :</b> ${Q.q2.pv_a_ne_pas_rediger.map(esc).join(" · ")}</p>` : ""}
+      ${copie.q2.map(blocPp).join("")}
+      ${lecture ? "" : `<div class="carte ligne"><select id="type-pv" style="flex:1;min-width:220px">${PV_PP.map(([k, l]) => `<option value="${k}">${l}</option>`).join("")}</select>
+        <button class="prim" data-ajout-pv>+ Procès-verbal</button><button data-ajout-cadre>+ Cadre d'enquête</button></div>`}` : ""}
+    ${(Q.q3 || []).length ? `<h2 style="margin-top:22px">Q3 · Questions <span class="doux">/${sujet.points?.q3 ?? 10}</span></h2>
+      ${Q.q3.map((q, i) => `<div class="carte"><div class="ligne"><b>Question ${i + 1}</b><span class="espace"></span><span class="badge">${q.points} pts</span></div>
+        <p style="margin:6px 0 10px">${esc(q.enonce)}</p>${champ(`q3.${i}.texte`, copie.q3[i]?.texte, "Règle de droit (articles), puis « En l'espèce… »")}</div>`).join("")}` : ""}`;
+
+  const formPdf = () => `<div class="carte">
+    <h2>Réponse sur formulaire PDF</h2>
+    ${lecture ? (copie.extraction ? `<p class="doux">Contenu lu dans ton formulaire :</p><div class="pre">${esc(copie.extraction)}</div>` : `<p class="doux">Réponse rédigée sur le formulaire PDF officiel.</p>`) : `
+    <p>1. Télécharge le ou les imprimés de l'épreuve et remplis-les dans ton lecteur PDF (Acrobat Reader, navigateur…), puis enregistre-les :</p>
+    <p class="ligne">${FORMULAIRES[ep].map((n) => `<a class="btn" href="formulaires/Formulaire_${n}_a_remplir.pdf" download>📄 Imprimé 651.4.${n}</a>`).join("")}</p>
+    <p class="doux">Il te faut plus de feuilles ? Télécharge l'imprimé une seconde fois et numérote les feuilles (1/2, 2/2…).</p>
+    <p>2. Clique sur « Envoyer ma réponse », colle la commande copiée dans Claude Code <b>et glisse tes PDF remplis dans le même message</b>.</p>`}
+  </div>`;
+
   const rendre = () => {
     timer?.stop();
     vue.innerHTML = `
@@ -428,26 +591,27 @@ async function exercice(id) {
         ${copie.entrainement ? `<span class="badge" title="Documents consultés">📚 Entraînement</span>` : ""}
         <span class="espace"></span>
         <span id="timer"></span>
+        ${lecture ? "" : `<span class="filtres"><button class="mini ${copie.mode === "pdf" ? "" : "actif"}" data-mode="en_ligne">✍️ En ligne</button><button class="mini ${copie.mode === "pdf" ? "actif" : ""}" data-mode="pdf">📄 Formulaire PDF</button></span>`}
         <button class="mini" id="docs">📚 Documents</button>
         <button class="mini icone" data-partager="${id}" title="Partager">🔗</button>
         ${lecture ? "" : `<button class="prim" id="envoyer">Envoyer ma réponse</button>`}
       </div>
       ${sujet.statut === "rendu" ? `<div class="carte" style="border-left:4px solid var(--or)">
-        <b>Exercice terminé.</b> Colle cette commande (elle contient ta réponse) dans Claude Code, puis reviens ici une à deux minutes après la correction.
+        <b>Exercice terminé.</b> Colle cette commande (elle contient ta réponse) dans Claude Code${copie.mode === "pdf" ? " <b>avec tes formulaires PDF remplis</b>" : ""}, puis reviens ici une à deux minutes après la correction.
         <textarea readonly id="cmd-corriger" style="margin-top:10px">${esc(commandeCorriger(id, copie))}</textarea>
         <button class="prim" id="copier-corriger" style="margin-top:8px">Copier la commande</button></div>` : ""}
       ${sujet.statut === "corrige" ? vueCorrection(sujet, corr) : ""}
       <div class="grille">
         <div class="carte theme">${esc(sujet.theme)}</div>
         <div>
-          ${crt ? formCrt() : formDps()}
-          ${lecture ? "" : `<div class="ligne">
-            ${sujet.type === "multiple" ? `<button id="ajout">+ Ajouter une infraction</button>` : ""}
+          ${copie.mode === "pdf" ? formPdf() : { dps: formDps, crt: formCrt, pp: formPp }[ep]()}
+          ${lecture ? "" : `<div class="ligne" style="margin-top:12px">
+            ${sujet.type === "multiple" && copie.mode !== "pdf" ? `<button id="ajout">+ Ajouter une infraction</button>` : ""}
             <span class="espace"></span><button class="prim" id="envoyer-bas">Envoyer ma réponse</button></div>`}
         </div>
       </div>`;
     vue.querySelectorAll("textarea").forEach((t) => (t.style.height = t.scrollHeight + 2 + "px"));
-    timer = monterTimer(document.getElementById("timer"), id, sujet.epreuve, lecture);
+    timer = monterTimer(document.getElementById("timer"), id, sujet.epreuve, lecture, sujet.duree_minutes);
   };
   let timer = null;
   nettoyage = () => { timer?.stop(); document.getElementById("tiroir").classList.remove("ouvert"); };
@@ -468,6 +632,17 @@ async function exercice(id) {
     else if (d.supprEm) { const [i, j] = d.supprEm.split("."); copie.reponses[i].elements_materiels.splice(j, 1); }
     else if (d.suppr) { if (!confirm("Supprimer cette infraction ?")) return; copie.reponses.splice(d.suppr, 1); }
     else if (b.id === "ajout") copie.reponses.push(nouvelleInfraction());
+    else if (d.mode) copie.mode = d.mode;
+    else if (d.ajoutQ1 != null) copie.q1.push({ mis_en_cause: copie.q1.at(-1)?.mis_en_cause || "", texte: "" });
+    else if (d.supprQ1) copie.q1.splice(+d.supprQ1, 1);
+    else if (d.ajoutPv != null) { const a = document.getElementById("type-pv").value; copie.q2.push({ type: "pv", acte: a, intitule: "" }); }
+    else if (d.ajoutCadre != null) copie.q2.push({ type: "cadre", cadre_juridique: "" });
+    else if (d.supprQ2) { if (!confirm("Supprimer ce bloc ?")) return; copie.q2.splice(+d.supprQ2, 1); }
+    else if (d.monter || d.descendre) {
+      const i = +(d.monter || d.descendre), j = d.monter ? i - 1 : i + 1;
+      if (j < 0 || j >= copie.q2.length) return;
+      [copie.q2[i], copie.q2[j]] = [copie.q2[j], copie.q2[i]];
+    }
     else if (d.partager) return partager(id);
     else if (b.id === "docs") return ouvrirTiroir(sujet.epreuve, () => { if (!lecture && !copie.entrainement) { copie.entrainement = true; sauver(); } });
     else if (b.id === "copier-corriger") return copier(commandeCorriger(id, copie), "Commande copiée : colle-la dans Claude Code");
@@ -504,7 +679,7 @@ async function stats() {
   }).join("");
   // Réussite par type d'élément, d'après les titres des sections de correction
   const TYPES = [["Qualification", /qualif/i], ["Élément légal", /légal/i], ["Élément matériel", /matériel/i], ["Élément moral", /moral/i],
-    ["Objet / cadre", /objet/i], ["Faits", /faits/i], ["Actes d'enquête", /actes/i], ["Pièges / oublis", /piège|oubli|en trop/i]];
+    ["Erreurs majeures", /majeure/i], ["Cadre d'enquête", /cadre/i], ["Procès-verbaux", /procès-verbal|PV/i], ["Questions de cours", /question/i], ["Objet (CRT)", /objet/i], ["Faits", /faits/i], ["Actes d'enquête", /actes/i], ["Pièges / oublis", /piège|oubli|en trop/i]];
   const barres = TYPES.map(([nom, re]) => {
     const s = faits.flatMap((x) => x.corr.sections || []).filter((x) => re.test(x.titre) && ICONE[x.statut]);
     if (!s.length) return "";
